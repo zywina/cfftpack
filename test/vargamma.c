@@ -5,8 +5,8 @@ the Black-Scholes formula.
 Roy Zywina, (c) 2017
 */
 
-#include <fftpack/cfftpack.h>
-#include <fftpack/cfftextra.h>
+#include <cfftpack/cfftpack.h>
+#include <cfftpack/cfftextra.h>
 
 #include <math.h>
 #include <complex.h>
@@ -42,7 +42,7 @@ This approach was first introduced in Lord et al 2008 (link).
 The code used here is based on a simplified presentation of
 the algorithm (Zywina 201x) (link)
 
-Converted to RFFT to maximize performance. I also notice a 
+Converted to RFFT to maximize performance. I also notice a
 speed difference between C's "double _Complex" and C++'s
 "std::complex<double>".
 */

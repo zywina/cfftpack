@@ -3,8 +3,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
-#include <fftpack/cfftpack.h>
-#include <fftpack/cfftextra.h>
+#include <cfftpack/cfftpack.h>
+#include <cfftpack/cfftextra.h>
 #include "naivepack.h"
 
 unsigned int get_seed(){

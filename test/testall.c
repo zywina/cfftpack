@@ -4,8 +4,8 @@ Test everything against the naive versions.
 Roy Zywina, (c) 2017
 */
 
-#include <fftpack/cfftpack.h>
-#include <fftpack/cfftextra.h>
+#include <cfftpack/cfftpack.h>
+#include <cfftpack/cfftextra.h>
 #include "naivepack.h"
 
 #include <math.h>

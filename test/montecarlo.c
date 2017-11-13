@@ -13,7 +13,7 @@ In practice they appear to perform about the same.
 Roy Zywina, (c) 2017
 */
 
-#include <fftpack/cfftextra.h>
+#include <cfftpack/cfftextra.h>
 
 #include <math.h>
 #include <stdio.h>

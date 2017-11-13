@@ -1,6 +1,6 @@
 
 
-set(FFTPACK_SRC
+set(CFFTPACK_SRC
   fftpack.c
   fftpack.h
   cfftpack.c
@@ -9,4 +9,4 @@ set(FFTPACK_SRC
   cfftextra.h
 )
 
-add_library(fftpack STATIC ${FFTPACK_SRC})
+add_library(cfftpack STATIC ${CFFTPACK_SRC})

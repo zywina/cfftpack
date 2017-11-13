@@ -10,8 +10,8 @@ Roy Zywina, (c) 2017
 #include <algorithm>
 using namespace std;
 
-#include <fftpack/cfftpack.h>
-#include <fftpack/cfftextra.h>
+#include <cfftpack/cfftpack.h>
+#include <cfftpack/cfftextra.h>
 
 
 double normal_cdf(double x){
