@@ -33,7 +33,7 @@ void test1(){
   int i,j;
   fft_t *f = fft_create(N);
   bool ortho=false;
-  fft_scale_orthogonal(f, ortho);
+  fft_ortho(f, ortho);
   for (i=0; i<N; i++){
     data[i] = //i+1 + (fft_real_t _Imaginary_I)*(i-5);
       CMPLX(i+1, 0);
@@ -86,9 +86,9 @@ void test2(){
 
   int ortho = 0;
 
-  fft_scale_orthogonal(f, true);
-  fft_scale_orthogonal(f2, true);
-  fft_scale_orthogonal(f4, true);
+  fft_ortho(f, true);
+  fft_ortho(f2, true);
+  fft_ortho(f4, true);
 
   //dct_forward(f, data2);
   naive_dct4(N, data, data1, ortho);

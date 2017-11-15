@@ -1,9 +1,8 @@
 /**
+@brief C wrapper for FFTPACK
 @file cfftpack.h
 @author Roy Zywina
 @date November 2017
-@brief C wrapper for FFTPACK
-
 
 
 C/C++ wrapper for fortran FFTPACK version 5.1
@@ -12,7 +11,7 @@ Roy Zywina, (c) 2017
 
 The purpose of this project is to provide a relatively thin wrapper for FFTPACK
 with a more familiar API for C/C++ programmers. The only feature addition is an
-option for orthogonal scaling on some algorithms. Additional algorithms not
+option for orthonormal scaling on all algorithms. Additional algorithms not
 featured in the fortran (DCT-IV, DST-IV, etc) are in the optional files
 cfftextra.h/c along with some utility functions.
 
@@ -63,20 +62,20 @@ typedef struct FFT_ fft_t;
  */
 void fft_free(fft_t *f);
 /**
-@brief enable/disable orthogonal scaling. disabled by default.
+@brief enable/disable orthonormal scaling. disabled by default.
 @param f work struct created with any of the xxx_create functions
-@param ortho turn on/off orthogonal scaling
+@param ortho turn on/off orthonormal scaling
 
 The matter of scaling of outputs in FFT libraries is a bit of a pain point.
 Almost every library does it differently. FFTPACK applies scaling on forward
 transforms and none on backwrd transforms. Most other libraries do the opposite.
-Matlab uses orthogonal scaling for everything and FFTW ommits it entirely.
+Matlab uses orthonormal scaling for everything and FFTW ommits it entirely.
 
 If this is set to false (default)
 we use FFTPACK's standard scaling for each algorithm. When set to true we will
-convert to "orthogonal" (aka "orthonormal") scaling where available.
+convert to orthonormal scaling where available.
 */
-void fft_scale_orthogonal(fft_t *f, bool ortho);
+void fft_ortho(fft_t *f, bool ortho);
 
 /**
 @brief set stride of 1 dimensional transforms
@@ -87,7 +86,7 @@ All of the 1 dimensional transforms assume a stride of 1 by default. This is
 equivalent to a tightly packed array. This value can be changed to construct
 multi dimensional transforms.
 */
-void fft_set_stride(fft_t *f, int stride);
+void fft_stride(fft_t *f, int stride);
 
 /**
 @brief create standard discrete Fourier transform object
@@ -109,7 +108,7 @@ fft_t *fft_create(int size);
   (fft_reat_t _Complex*) or (std::complex<fft_real_t> *)
 @return zero on success, nonzero on error.
 
-Forward discrete Fourier transform (FFT). By default (with orthogonal scaling off)
+Forward discrete Fourier transform (FFT). By default (with orthonormal scaling off)
 FFTPACK applies 1/N scaling on the forward transform and no scaling on the
 inverse. This behaviour is opposite of many other libraries.
 */
@@ -127,7 +126,7 @@ Inverse discrete Fourier transform (IFFT).
 int fft_inverse(fft_t *f, void *data);
 
 
-/*
+/**
 @brief create work object for 2 dimensional DFT
 
 Two dimensional discrete Fourier transform. Input arrays
@@ -135,11 +134,11 @@ will be assumed to be of length M*N.
 */
 fft_t *fft2_create(int M,int N);
 
-/*
+/**
 @brief forward 2D FFT
 */
 int fft2_forward(fft_t *f, fft_real_t _Complex *data);
-/*
+/**
 @brief inverse 2D FFT
 */
 int fft2_inverse(fft_t *f, fft_real_t _Complex *data);
@@ -245,7 +244,7 @@ is hard to deal with. This has been modified so you can directly write to an
 complex typed array.
 
 Due to the moving around of parameters and different types, this is the only
-1 dimensional transform that does not accept #fft_set_stride modifications.
+1 dimensional transform that does not accept #fft_stride modifications.
 They will be ignored.
 */
 fft_t *rfft_create(int size);

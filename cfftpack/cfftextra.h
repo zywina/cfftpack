@@ -52,7 +52,7 @@ int fft_shift(void *data, int n);
 Implements the dct4 algorithm as a mix of two half length dct2 transforms.
 FFTPACK only has the first three of the four main DCT variants.
 This transform only accepts even array sizes. DCT-IV is it's own inverse
-(much like DCT-I) so the two transform functions become identical if orthogonal
+(much like DCT-I) so the two transform functions become identical if orthonormal
 scaling is enabled.
 */
 fft_t *dct4_create(int size);
@@ -60,14 +60,14 @@ fft_t *dct4_create(int size);
 /**
 @brief inplace forward DCT-IV transform
 
-If orthogonal scaling is enabled this function is identical to #dct4_inverse
+If orthonormal scaling is enabled this function is identical to #dct4_inverse
 */
 int dct4_forward(fft_t *f, fft_real_t *data);
 
 /**
 @brief inplace inverse DCT-IV transform
 
-If orthogonal scaling is enabled this function is identical to #dct4_forward
+If orthonormal scaling is enabled this function is identical to #dct4_forward
 */
 int dct4_inverse(fft_t *f, fft_real_t *data);
 

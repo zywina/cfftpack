@@ -41,17 +41,17 @@ void fft_free(fft_t *f){
   }
 }
 
-// enable orthogonal scaling
-void fft_scale_orthogonal(fft_t *f, bool ortho){
+// enable orthonormal scaling
+void fft_ortho(fft_t *f, bool ortho){
   if (f)
     f->ortho=ortho;
 }
 
-void fft_set_stride(fft_t *f, int stride){
+void fft_stride(fft_t *f, int stride){
   if (f){
     f->inc = stride > 0 ? stride : 1;
     if (f->sub)
-      fft_set_stride(f->sub, f->inc);
+      fft_stride(f->sub, f->inc);
   }
 }
 
@@ -371,10 +371,6 @@ int rfft_forward(fft_t *f, const fft_real_t *inp, void *outp){
   fft_real_t *data = (fft_real_t*)outp;
   if (inp!=data){
     memcpy(data,inp,f->n*sizeof(fft_real_t));
-  }else{
-    // shift one spot
-    //for (i=f->n; i>0; i--)
-    //  data[i] = data[i-1];
   }
   rfft1f_(&f->n, &inc, data, &f->n, f->save, &f->lensav, f->work, &f->lenwork, &ier);
   // shift one spot

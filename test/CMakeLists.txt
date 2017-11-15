@@ -12,11 +12,11 @@ target_link_libraries (blackscholes cfftpack)
 add_executable(vargamma vargamma.c)
 target_link_libraries (vargamma cfftpack)
 
-add_executable(montecarlo montecarlo.c)
+add_executable(montecarlo montecarlo.c util.h util.c)
 target_link_libraries (montecarlo cfftpack)
 
 add_executable(test1 test1.c ${TEST_SRC})
 target_link_libraries (test1 cfftpack)
 
-add_executable(testall testall.c ${TEST_SRC})
+add_executable(testall testall.c ${TEST_SRC} util.h util.c)
 target_link_libraries (testall cfftpack)

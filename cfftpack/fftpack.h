@@ -32,8 +32,8 @@ C     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
 /**
 @file fftpack.h
-@author Paul N. Swarztrauber and Richard A. Valent
 @brief Fortran API for FFTPACK 5.1
+@author Paul N. Swarztrauber and Richard A. Valent
 
 
 FFTPACK 5.1, traditional Fortran API converted by f2c.
@@ -111,15 +111,14 @@ int cost1b_(int *n, int *inc, fft_real_t *x, int *lenx,
 int cost1f_(int *n, int *inc, fft_real_t *x, int *lenx,
     fft_real_t *wsave, int *lensav, fft_real_t *work, int *lenwrk, int *ier);
 
-// DCT 2 and 3
 
-/// IDCT (DCT-II)
+/// initialize constants for DCT
 int cosq1i_(int *n, fft_real_t *wsave, int *lensav,
   	int *ier);
 /// DCT (DCT-III)
 int cosq1f_(int *n, int *inc, fft_real_t *x, int *lenx,
     fft_real_t *wsave, int *lensav, fft_real_t *work, int *lenwrk, int *ier);
-/// initialize constants for DCT
+/// IDCT (DCT-II)
 int cosq1b_(int *n, int *inc, fft_real_t *x, int *lenx,
     fft_real_t *wsave, int *lensav, fft_real_t *work, int *lenwrk, int *ier);
 
@@ -131,6 +130,7 @@ int sinq1b_(int *n, int *inc, fft_real_t *x, int *lenx,
 /// DST
 int sinq1f_(int *n, int *inc, fft_real_t *x, int *lenx,
     fft_real_t *wsave, int *lensav, fft_real_t *work, int *lenwrk, int *ier);
+// initialize constants for #sinq1b_ and #sinq1f
 int sinq1i_(int *n, fft_real_t *wsave, int *lensav, int *ier);
 
 
@@ -161,7 +161,8 @@ enum{
   ALGO_DCT,
   ALGO_DCT4,
   ALGO_DST1,
-  ALGO_DST
+  ALGO_DST,
+  ALGO_DST4
 };
 
 struct FFT_{

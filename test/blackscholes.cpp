@@ -40,7 +40,7 @@ The code used here is based on a simplified presentation of
 the algorithm (Zywina 201x) (link)
 
 We can get ~2x speed boost by using rfft instead of fft, but that
-changes the math a little. See vargamma.c for example.
+changes things a little. See vargamma.c for example.
 */
 double conv_option(double S,double K,double sigma,double t,double r, bool isCall){
   const int N = 1024 * 8; // bigger N => lower error
@@ -89,6 +89,7 @@ double conv_option(double S,double K,double sigma,double t,double r, bool isCall
   return value;
 }
 
+// print out an option price table
 void run_tests(){
   double S,K,sigma,t,r;
   S = 100.0;

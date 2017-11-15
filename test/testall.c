@@ -7,11 +7,13 @@ Roy Zywina, (c) 2017
 #include <cfftpack/cfftpack.h>
 #include <cfftpack/cfftextra.h>
 #include "naivepack.h"
+#include "util.h"
 
 #include <math.h>
 #include <time.h>
 #include <stdlib.h>
 #include <stdio.h>
+
 
 #ifdef assert
 #undef assert
@@ -34,17 +36,6 @@ int test_real_transform()
   return 0;
 }
 
-double rand_uniform(){
-  return (double)rand() / (double)(RAND_MAX);
-}
-
-double rand_norm(){
-  double tot=0;
-  int i;
-  for (i=0; i<12; i++)
-    tot += rand_uniform();
-  return tot - 6.0;
-}
 
 // return largest absolute value in array
 fft_real_t max_abs_value(int n, const fft_real_t *x){
@@ -91,7 +82,7 @@ void test_dct(int N){
 
   int i,ret;
   for (i=0; i<N; i++){
-    a[i] = b[i] = c[i] = d[i] = rand_norm();
+    a[i] = b[i] = c[i] = d[i] = rand_normal();
   }
   ret = dct_forward(dct,b);
   assert(ret==0);
@@ -124,12 +115,12 @@ void test_dct(int N){
   ret = compare_real(N, d, a);
   assert(ret==0);
 
-  fft_scale_orthogonal(dct, true);
-  fft_scale_orthogonal(dct1, true);
-  fft_scale_orthogonal(dct4, true);
+  fft_ortho(dct, true);
+  fft_ortho(dct1, true);
+  fft_ortho(dct4, true);
 
   for (i=0; i<N; i++){
-    a[i] = b[i] = c[i] = d[i] = 1;//rand_norm();
+    a[i] = b[i] = c[i] = d[i] = 1;//rand_normal();
   }
 
   ret = dct_forward(dct,b);
@@ -174,7 +165,7 @@ void test_dct(int N){
 
 
 int main(){
-  srand(time(0));
+  rand_seed();
   test_dct(512);
 
   return 0;
