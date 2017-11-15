@@ -6,26 +6,9 @@
 #include <cfftpack/cfftpack.h>
 #include <cfftpack/cfftextra.h>
 #include "naivepack.h"
+#include "util.h"
 
-unsigned int get_seed(){
-  FILE *fp = fopen("/dev/urandom","r");
-  unsigned int i=time(0);
-  if (fp){
-    fread(&i,sizeof(int),1,fp);
-    fclose(fp);
-  }
-  return i;
-}
 
-// wilmott's method for approx normal samples
-fft_real_t rand_norm(){
-  fft_real_t tot=0;
-  int i;
-  for (i=0; i<12; i++){
-    tot += (fft_real_t)rand() / (fft_real_t)RAND_MAX;
-  }
-  return tot - 6.0;
-}
 
 void test1(){
   const int N = 16;
@@ -72,7 +55,7 @@ void test2(){
   data[1]=1;
   //data[2]=-1;
   for (i=0; i<N; i++){
-    data[i] = rand_norm();
+    data[i] = rand_normal();
     //data[i] = cos(i*0.22+0.334) + sin(i*0.14+2.2);
     //data[i] = i*i+1;//pow(i+1,1);
   }
@@ -171,10 +154,7 @@ void test_size(){
 }
 
 int main(){
-  //printf ("RAND_MAX %d\n\n", RAND_MAX);
-  unsigned int seed = get_seed();
-  //printf("seed = %u\n",seed);
-  srand(seed);
+  rand_seed();
   //test1();
   test2();
   //test3();
