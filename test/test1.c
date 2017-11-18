@@ -138,7 +138,7 @@ void test3(){
 
     fft_t *f = fft2_create(N,M);
 
-    int ret = fft2_forward(f, y);
+    int ret = fft2_forward(f, (fft_complex_t*)y);
     if (ret){
       printf("return code %d\n",ret);
     }else{

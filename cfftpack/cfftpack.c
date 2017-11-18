@@ -60,7 +60,7 @@ int fft_forward(fft_t *f, void *vdata){
   if (!f || !vdata) return -1;
   if (f->algo != ALGO_CFFT) return -2;
   int ier=0;
-  fft_real_t _Complex *data = (fft_real_t _Complex *)vdata;
+  fft_complex_t *data = (fft_complex_t *)vdata;
   cfft1f_(&f->n, &f->inc, data, &f->n, f->save, &f->lensav,
     f->work,&f->lenwork,&ier);
   if (ier)
@@ -68,8 +68,10 @@ int fft_forward(fft_t *f, void *vdata){
   if (f->ortho){
     fft_real_t mul = 1.0 / sqrt(f->n);
     int i;
-    for (i=0; i<f->n; i++)
-      data[i] *= mul;
+    for (i=0; i<f->n; i++){
+      data[i].r *= mul;
+      data[i].i *= mul;
+    }
   }
 
   return 0;
@@ -80,7 +82,7 @@ int fft_inverse(fft_t *f, void *vdata){
   if (!f || !vdata) return -1;
   if (f->algo != ALGO_CFFT) return -2;
   int ier=0;
-  fft_real_t _Complex *data = (fft_real_t _Complex *)vdata;
+  fft_complex_t *data = (fft_complex_t *)vdata;
   cfft1b_(&f->n, &f->inc, data, &f->n, f->save, &f->lensav,
     f->work,&f->lenwork,&ier);
   if (ier)
@@ -88,8 +90,10 @@ int fft_inverse(fft_t *f, void *vdata){
   if (f->ortho){
     fft_real_t mul = sqrt(f->n);
     int i;
-    for (i=0; i<f->n; i++)
-      data[i] *= mul;
+    for (i=0; i<f->n; i++){
+      data[i].r *= mul;
+      data[i].i *= mul;
+    }
   }
 
   return 0;
@@ -123,7 +127,7 @@ fft_t *fft2_create(int l,int m){
 
 
 // forward inplace transform
-int fft2_forward(fft_t *f, fft_real_t _Complex *data){
+int fft2_forward(fft_t *f, fft_complex_t *data){
   if (!f || !data) return -1;
   int ier=0;
   int inc=1;
@@ -135,7 +139,7 @@ int fft2_forward(fft_t *f, fft_real_t _Complex *data){
 }
 
 // forward inplace transform
-int fft2_inverse(fft_t *f, fft_real_t _Complex *data){
+int fft2_inverse(fft_t *f, fft_complex_t *data){
   if (!f || !data) return -1;
   int ier=0;
   int inc=1;

@@ -11,6 +11,7 @@ Roy Zywina, (c) 2017, MIT licence (https://opensource.org/licenses/MIT)
 
 #include <stdbool.h>
 #include <cfftpack/fftpack.h>
+#include <complex.h>
 
 /*
 mode: 0 - orthogonal, 1 fwd scaling, -1 inverse scaling

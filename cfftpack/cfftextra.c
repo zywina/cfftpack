@@ -32,7 +32,7 @@ int fft_next_fast_even_size(int n){
 
 int fft_shift(void *vdata, int n){
   if (!vdata || n<0) return -1;
-  fft_real_t _Complex tmp, *data=(fft_real_t _Complex*)vdata;
+  fft_complex_t tmp, *data=(fft_complex_t*)vdata;
   int i,j,n2 = n/2;
   for (i=0; i<n2; i++){
     j = n2+i;

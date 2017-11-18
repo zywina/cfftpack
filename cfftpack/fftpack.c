@@ -44,7 +44,7 @@ C     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 //#include "f2c.h" // f2c dependencies removed
 #include "fftpack.h"
 #include <math.h>
-#include <complex.h>
+//#include <complex.h>
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -52,7 +52,7 @@ C     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 #undef complex
 #endif
 
-#define complex fft_real_t _Complex
+#define complex fft_complex_t
 
 #ifndef min
 #define min(a,b) ((a)<(b)?(a):(b))

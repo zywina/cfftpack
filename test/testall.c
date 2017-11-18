@@ -37,34 +37,20 @@ int test_real_transform()
 }
 
 
-// return sum of absolute values of array
-fft_real_t sum_abs_value(int n, const fft_real_t *x){
-  fft_real_t mx = 0;
-  int i;
-  for (i=0; i<n; i++){
-    fft_real_t ax = fabs(x[i]);
-    mx+=ax;
-  }
-  return mx;
-}
 
 /*
-I'm (somewhat incorrectly) defining acceptable numerical accuracy
-as within a reasonable epsilon of the sum of the array.
+ensure within some (arbitrarily chosen) precision
 */
 int compare_real(int N, const fft_real_t *x, const fft_real_t *y){
-  fft_real_t maxval = sum_abs_value(N,x);
-  maxval=1;
   fft_real_t cutoff;
   if (sizeof(fft_real_t)==sizeof(float))
-    cutoff = maxval * 1e-4;
+    cutoff = 1e-4;
   else
-    cutoff = maxval * 1e-14;
+    cutoff = 5e-14;
   int i;
   for (i=0; i<N; i++){
     printf("%d: %e  %e\n",i,fabs(x[i]-y[i]), cutoff);
     if (fabs(x[i]-y[i]) > cutoff){
-      printf("maxval %f\n",maxval);
       printf("%d: x: %f, y: %f, %e  %e\n",i,x[i],y[i],fabs(x[i]-y[i]), cutoff);
       return -1;
     }
@@ -128,7 +114,7 @@ void test_dct(int N){
   fft_ortho(dct4, true);
 
   for (i=0; i<N; i++){
-    a[i] = b[i] = c[i] = d[i] = 1+i;//rand_normal();
+    a[i] = b[i] = c[i] = d[i] = rand_normal();
   }
 
   ret = dct_forward(dct,b);

@@ -28,11 +28,11 @@ performance, you should look at FFTW instead.
 can't use the _Complex types directly in a cpp file but you can cast to them if
 the math is done in a c file. This divergence in C/C++ standards is very annoying
 because C's "double _Complex" is much faster than C++'s "std::complex<double>" */
-#include <complex>
+//#include <complex>
 #endif
 
 #include <math.h>
-#include <complex.h>
+//#include <complex.h>
 #include <stdlib.h>
 #include <stdbool.h>
 
@@ -135,11 +135,11 @@ fft_t *fft2_create(int M,int N);
 /**
 @brief forward 2D FFT
 */
-int fft2_forward(fft_t *f, fft_real_t _Complex *data);
+int fft2_forward(fft_t *f, fft_complex_t *data);
 /**
 @brief inverse 2D FFT
 */
-int fft2_inverse(fft_t *f, fft_real_t _Complex *data);
+int fft2_inverse(fft_t *f, fft_complex_t *data);
 
 
 /**

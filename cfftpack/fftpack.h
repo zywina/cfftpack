@@ -50,11 +50,11 @@ This code is in the public domain.
 
 #ifdef __cplusplus
 // most c++ compilers break if <complex.h> is included before <complex>
-#include <complex>
+//#include <complex>
 #endif
 
 #include <math.h>
-#include <complex.h>
+//#include <complex.h>
 #include <stdlib.h>
 
 #ifdef __cplusplus
@@ -70,15 +70,25 @@ extern "C"{
 #endif
 
 
+/*
+This type is binary compatable with C's "double _Complex" or
+C++'s "std::complex<double>" or simple an array of length 2*N of
+double. (or float if you redefine fft_Real_t)
+*/
+typedef struct{
+  fft_real_t r;
+  fft_real_t i;
+}fft_complex_t;
+
 /* Fortran API */
 
 /// FFT
-int cfft1b_(int *n, int *inc, fft_real_t _Complex *c__, int *
+int cfft1b_(int *n, int *inc, fft_complex_t *c__, int *
    	lenc, fft_real_t *wsave, int *lensav, fft_real_t *work, int *lenwrk,
    	int *ier);
 
 /// IFFT
-int cfft1f_(int *n, int *inc, fft_real_t _Complex *c__, int *
+int cfft1f_(int *n, int *inc, fft_complex_t *c__, int *
     lenc, fft_real_t *wsave, int *lensav, fft_real_t *work, int *lenwrk,
     int *ier);
 
@@ -86,12 +96,12 @@ int cfft1f_(int *n, int *inc, fft_real_t _Complex *c__, int *
 int cfft1i_(int *n, fft_real_t *wsave, int *lensav,int *ier);
 
 /// 2D FFT
-int cfft2b_(int *ldim, int *l, int *m, fft_real_t _Complex *
+int cfft2b_(int *ldim, int *l, int *m, fft_complex_t *
 	c__, fft_real_t *wsave, int *lensav, fft_real_t *work, int *lenwrk,
 	int *ier);
 
 /// 2D IFFT
-int cfft2f_(int *ldim, int *l, int *m, fft_real_t _Complex *
+int cfft2f_(int *ldim, int *l, int *m, fft_complex_t *
 	c__, fft_real_t *wsave, int *lensav, fft_real_t *work, int *lenwrk,
 	int *ier);
 
