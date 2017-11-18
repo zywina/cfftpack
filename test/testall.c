@@ -63,9 +63,9 @@ void test_dct(int N){
   dct = dct_create(N);
   dct1 = dct1_create(N);
   dct4 = dct4_create(N);
-  assert(dct);
-  assert(dct1);
-  assert(dct4);
+  assert(dct!=NULL);
+  assert(dct1!=NULL);
+  assert(dct4!=NULL);
 
   fft_real_t *a, *b, *c, *d, *e;
   a = calloc(N,sizeof(fft_real_t));
