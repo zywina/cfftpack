@@ -124,8 +124,8 @@ void test_asian_option(bool random, int samples){
 }
 
 void test(){
-  const int N = 5;
-  const int samples[N] = {500, 1000, 2000, 4000, 8000};
+  const int samples[5] = {500, 1000, 2000, 4000, 8000};
+  int N = 5;
   int i;
 
   printf("\nQuasi-Monte Carlo Test\n");
