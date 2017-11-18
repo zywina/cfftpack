@@ -121,7 +121,7 @@ void naive_dct4(int N, const fft_real_t *x, fft_real_t *y, int mode){
 void naive_fft(int n, const fft_real_t _Complex *x, fft_real_t _Complex *y, bool ortho){
   int i,j;
   fft_real_t _Complex W,w;
-  W = CMPLX(0.0, -2.0*M_PI/n);
+  W = -2.0*I*M_PI/n;
   // this would be 1.0 in most other libraries
   fft_real_t m = 1.0 / n;
   if (ortho)
@@ -139,7 +139,7 @@ void naive_fft(int n, const fft_real_t _Complex *x, fft_real_t _Complex *y, bool
 void naive_ifft(int n, const fft_real_t _Complex *x, fft_real_t _Complex *y, bool ortho){
   int i,j;
   fft_real_t _Complex W,w;
-  W = CMPLX(0.0, 2.0*M_PI/n);
+  W = 2.0*I*M_PI/n;
   // this would be 1.0/n in most other libraries
   fft_real_t m = 1.0;
   if (ortho)

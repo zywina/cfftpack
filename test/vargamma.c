@@ -63,7 +63,6 @@ double conv_bsvg_option(int n,double S,double K,
   }
 
   // apply charactersitic function for our probability distribution
-  double _Complex J = CMPLX(0,1);
   double _Complex psi,phi;
   double drift;
   if (isBS)
@@ -76,11 +75,11 @@ double conv_bsvg_option(int n,double S,double K,
     //phi = cexp(psi*t);
     if (isBS){
       // black scholes
-      psi = -0.5*sigma*sigma*u*u*t + J*u*t*drift;
+      psi = -0.5*sigma*sigma*u*u*t + I*u*t*drift;
       phi = cexp(psi);
     }else{
       // VG characteristic exponent
-      psi = 1.0 + sigma*sigma*kappa*u*u/2.0 - J*theta*kappa*u;
+      psi = 1.0 + sigma*sigma*kappa*u*u/2.0 - I*theta*kappa*u;
       phi = cpow(psi, -t/kappa);
       //psi = -clog(1.0+sigma*sigma*u*u*kappa/2.0-J*theta*kappa*u)/kappa;
       //phi = cexp(psi*t-0.5*sigma*sigma*u*u*t + J*u*t*drift);

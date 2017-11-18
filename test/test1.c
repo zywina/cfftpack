@@ -20,7 +20,7 @@ void test1(){
   fft_ortho(f, ortho);
   for (i=0; i<N; i++){
     data[i] = //i+1 + (fft_real_t _Imaginary_I)*(i-5);
-      CMPLX(i+1, 0);
+      i+1.0;
   }
   naive_fft(N, data, data2, ortho);
   int ret = fft_forward(f, data);
@@ -129,7 +129,7 @@ void test3(){
 
     for (i=0; i<N; i++){
       for (j=0; j<M; j++){
-        x[N*j+i] = CMPLX( 100.0/(i+j+1), i+j);
+        x[N*j+i] = 100.0/(i+j+1) + I*(i+j);
       }
     }
     memcpy(y,x,sizeof(fft_real_t _Complex)*LEN);
