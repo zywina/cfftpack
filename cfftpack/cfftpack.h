@@ -7,7 +7,7 @@
 
 C/C++ wrapper for fortran FFTPACK version 5.1
 
-Roy Zywina, (c) 2017
+Roy Zywina, (c) 2017, MIT licence (https://opensource.org/licenses/MIT)
 
 The purpose of this project is to provide a relatively thin wrapper for FFTPACK
 with a more familiar API for C/C++ programmers. The only feature addition is an
@@ -19,8 +19,6 @@ This library shares the philosophy of the (excelent) kiss_fft library to be
 small(ish), reasonably fast and have trivial licencing that can be used in any
 project, open source or commercial. If you absolutely need to maximize
 performance, you should look at FFTW instead.
-
-This code is in the public domain. There is no warranty or support.
 */
 #ifndef _CFFTPACK_H_
 #define _CFFTPACK_H_

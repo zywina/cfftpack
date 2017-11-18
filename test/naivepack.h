@@ -3,7 +3,7 @@ Naive implentations based on textbook definitions.
 
 This is only used for testing.
 
-Roy Zywina, 2017
+Roy Zywina, (c) 2017, MIT licence (https://opensource.org/licenses/MIT)
 */
 #ifndef _NAIVEPACK_H_
 #define _NAIVEPACK_H_
@@ -16,7 +16,7 @@ Roy Zywina, 2017
 mode: 0 - orthogonal, 1 fwd scaling, -1 inverse scaling
 */
 void naive_dct1(int n, const fft_real_t *x, fft_real_t *y, int mode);
-//void naive_dct1_inv(int N, const fft_real_t *x, fft_real_t *y, bool ortho);
+void naive_dct1_inv(int N, const fft_real_t *x, fft_real_t *y, bool ortho);
 
 void naive_dct2(int n, const fft_real_t *x, fft_real_t *y, bool ortho);
 void naive_dct3(int n, const fft_real_t *x, fft_real_t *y, bool ortho);

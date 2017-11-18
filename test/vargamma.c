@@ -2,7 +2,7 @@
 Price vanilla stock options using the FFT convolution method and compare with
 the Black-Scholes formula.
 
-Roy Zywina, (c) 2017
+Roy Zywina, (c) 2017, MIT licence (https://opensource.org/licenses/MIT)
 */
 
 #include <cfftpack/cfftpack.h>
@@ -14,26 +14,12 @@ Roy Zywina, (c) 2017
 #include <stdlib.h>
 #include <time.h>
 
+#include "util.h"
+
 
 #ifndef max
 #define max(a,b) ((a)>(b)?(a):(b))
 #endif
-
-double normal_cdf(double x){
-  return 0.5*(1.0+erf(x/sqrt(2.0)));
-}
-
-// classic Black-Scholes option pricing model
-double black_scholes_option(double S,double K,double sigma,double t,double r, bool isCall){
-  double d1,d2;
-  d1 = (log(S/K) + t*(r+sigma*sigma*0.5)) / (sigma*sqrt(t));
-  d2 = d1 - sigma*sqrt(t);
-  double C = S * normal_cdf(d1) - K * normal_cdf(d2) * exp(-r * t);
-  if (isCall)
-    return C;
-  double P = C - S + K*exp(-r * t);
-  return P;
-}
 
 /*
 Price a black scholes or variance gamma option using the convolution method.

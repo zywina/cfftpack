@@ -1,7 +1,7 @@
 /*
 Test everything against the naive versions.
 
-Roy Zywina, (c) 2017
+Roy Zywina, (c) 2017, MIT licence (https://opensource.org/licenses/MIT)
 */
 
 #include <cfftpack/cfftpack.h>
@@ -37,29 +37,37 @@ int test_real_transform()
 }
 
 
-// return largest absolute value in array
-fft_real_t max_abs_value(int n, const fft_real_t *x){
+// return sum of absolute values of array
+fft_real_t sum_abs_value(int n, const fft_real_t *x){
   fft_real_t mx = 0;
   int i;
   for (i=0; i<n; i++){
     fft_real_t ax = fabs(x[i]);
-    if (ax>mx) mx=ax;
+    mx+=ax;
   }
   return mx;
 }
 
+/*
+I'm (somewhat incorrectly) defining acceptable numerical accuracy
+as within a reasonable epsilon of the sum of the array.
+*/
 int compare_real(int N, const fft_real_t *x, const fft_real_t *y){
-  fft_real_t maxval = max_abs_value(N,x);
+  fft_real_t maxval = sum_abs_value(N,x);
+  maxval=1;
   fft_real_t cutoff;
   if (sizeof(fft_real_t)==sizeof(float))
-    cutoff = maxval * 1e-6;
+    cutoff = maxval * 1e-4;
   else
-    cutoff = maxval * 1e-12;
+    cutoff = maxval * 1e-14;
   int i;
   for (i=0; i<N; i++){
     printf("%d: %e  %e\n",i,fabs(x[i]-y[i]), cutoff);
-    if (fabs(x[i]-y[i]) > cutoff)
+    if (fabs(x[i]-y[i]) > cutoff){
+      printf("maxval %f\n",maxval);
+      printf("%d: x: %f, y: %f, %e  %e\n",i,x[i],y[i],fabs(x[i]-y[i]), cutoff);
       return -1;
+    }
   }
   return 0;
 }
@@ -120,11 +128,10 @@ void test_dct(int N){
   fft_ortho(dct4, true);
 
   for (i=0; i<N; i++){
-    a[i] = b[i] = c[i] = d[i] = 1;//rand_normal();
+    a[i] = b[i] = c[i] = d[i] = 1+i;//rand_normal();
   }
 
   ret = dct_forward(dct,b);
-  //dct_inverse(dct,b);
   assert(ret==0);
   ret = dct1_forward(dct1,c);
   assert(ret==0);
@@ -132,11 +139,6 @@ void test_dct(int N){
   assert(ret==0);
 
   naive_dct3(N, a, e, true);
-  naive_dct2(N, e, c, true);
-  for (i=0; i<N; i++){
-    printf("%4d: %15.8f %15.8f %15.8f\n",i,b[i],e[i],c[i]);
-  }
-  return;
   ret = compare_real(N, b, e);
   assert(ret==0);
   naive_dct1(N, a, e, 0);
@@ -160,13 +162,26 @@ void test_dct(int N){
   ret = compare_real(N, d, a);
   assert(ret==0);
 
+  fft_free(dct);
+  fft_free(dct1);
+  fft_free(dct4);
+  free(a);
+  free(b);
+  free(c);
+  free(d);
+  free(e);
+  printf("DCT tests passed\n");
+}
+
+void test_fft(){
+
 }
 
 
 
 int main(){
   rand_seed();
-  test_dct(512);
+  test_dct(32);
 
   return 0;
 }

@@ -7,9 +7,7 @@
 
 Optional additional utility functions and transforms.
 
-Roy Zywina, (c) 2017
-
-This code is in the public domain. There is no warranty.
+Roy Zywina, (c) 2017, MIT licence (https://opensource.org/licenses/MIT)
 */
 #ifndef _CFFTEXTRA_H_
 #define _CFFTEXTRA_H_

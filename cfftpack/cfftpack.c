@@ -178,18 +178,19 @@ int dct_forward(fft_t *f, fft_real_t *data){
     return -1;
   if (f->algo != ALGO_DCT)
     return -2;
-  int ier=0;
-  cosq1f_(&f->n, &f->inc, data, &f->n, f->save, &f->lensav, f->work, &f->lenwork, &ier);
-  if (ier)
-    return ier;
   if (f->ortho){
-    double m0 = sqrt(1.0/f->n);
-    double m = sqrt(2.0/f->n);
+    double m0 = sqrt(f->n);
+    double m = sqrt(0.5*f->n);
     data[0]*=m0;
     int i;
     for (i=1; i<f->n; i++)
       data[i] *= m;
   }
+
+  int ier=0;
+  cosq1f_(&f->n, &f->inc, data, &f->n, f->save, &f->lensav, f->work, &f->lenwork, &ier);
+  if (ier)
+    return ier;
   return 0;
 }
 
@@ -199,16 +200,16 @@ int dct_inverse(fft_t *f, fft_real_t *data){
     return -1;
   if (f->algo != ALGO_DCT)
     return -2;
-  if (f->ortho){
-    double m0 = sqrt(1.0/f->n);
-    double m = sqrt(2.0/f->n);
-    data[0]/=m0;
-    int i;
-    for (i=1; i<f->n; i++)
-      data[i] /= m;
-  }
   int ier=0, inc=1;
   cosq1b_(&f->n, &f->inc, data, &f->n, f->save, &f->lensav, f->work, &f->lenwork, &ier);
+  if (f->ortho){
+    double m0 = 1.0/sqrt(f->n);
+    double m = sqrt(2.0/f->n);
+    data[0]*=m0;
+    int i;
+    for (i=1; i<f->n; i++)
+      data[i] *= m;
+  }
   if (ier)
     return ier;
   return 0;
@@ -217,7 +218,8 @@ int dct_inverse(fft_t *f, fft_real_t *data){
 
 //
 fft_t *dct1_create(int size){
-  if (size<=0) return 0;
+  // size must be 2 or higher
+  if (size<=1) return 0;
   fft_t *f = (fft_t*)malloc(sizeof(fft_t));
   memset(f,0,sizeof(fft_t));
 
@@ -325,7 +327,7 @@ int dst_forward(fft_t *f, fft_real_t *data){
   if (!f || !data)
     return -1;
   int ier=0;
-  sinq1b_(&f->n, &f->inc, data, &f->n, f->save, &f->lensav, f->work, &f->lenwork, &ier);
+  sinq1f_(&f->n, &f->inc, data, &f->n, f->save, &f->lensav, f->work, &f->lenwork, &ier);
   if (ier)
     return ier;
   return 0;
@@ -335,7 +337,7 @@ int dst_inverse(fft_t *f, fft_real_t *data){
   if (!f || !data)
     return -1;
   int ier=0;
-  sinq1f_(&f->n, &f->inc, data, &f->n, f->save, &f->lensav, f->work, &f->lenwork, &ier);
+  sinq1b_(&f->n, &f->inc, data, &f->n, f->save, &f->lensav, f->work, &f->lenwork, &ier);
   if (ier)
     return ier;
   return 0;

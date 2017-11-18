@@ -6,10 +6,10 @@ set(TEST_SRC
   naivepack.c
 )
 
-add_executable(blackscholes blackscholes.cpp)
+add_executable(blackscholes blackscholes.cpp util.h util.c)
 target_link_libraries (blackscholes cfftpack)
 
-add_executable(vargamma vargamma.c)
+add_executable(vargamma vargamma.c util.h util.c)
 target_link_libraries (vargamma cfftpack)
 
 add_executable(montecarlo montecarlo.c util.h util.c)

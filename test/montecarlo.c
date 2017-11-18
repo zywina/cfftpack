@@ -10,7 +10,7 @@ leading to rapid convergence in path dependant financial simulations. DCT-II
 also works very well for this but DCT-IV should be a little better in theory.
 In practice they appear to perform about the same.
 
-Roy Zywina, (c) 2017
+Roy Zywina, (c) 2017, MIT licence (https://opensource.org/licenses/MIT)
 */
 
 #include <cfftpack/cfftextra.h>
@@ -34,7 +34,7 @@ Generate a path using either pure random (MC) or specially constructed QMC path
 void generate_brownian_path(unsigned int index,int N, bool random,
   fft_t *dct4, fft_real_t *path)
 {
-  int i,j;
+  int i;
   // monte carlo (MC)
   if (random){
     for (i=0; i<N; i++){

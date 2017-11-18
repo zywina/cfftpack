@@ -17,7 +17,7 @@ void rand_seed(){
     fread(&seed,1,sizeof(uint32_t),fp);
     fclose(fp);
   }
-  if (seed==0) seed=1000000;
+  if (seed==0) seed=12345678;
   xorshift_state = seed;
   rand_uniform();
   rand_uniform();
@@ -47,9 +47,6 @@ double normal_cdf(double x){
  *
  *   Author:      Peter J. Acklam <pjacklam@online.no>
  *   URL:         http://home.online.no/~pjacklam
- *
- * This function is based on the MATLAB code from the address above,
- * translated to C, and adapted for our purposes.
  */
 double normal_icdf(double p){
  const double a[6] = {
@@ -164,4 +161,16 @@ void halton_sequence(unsigned int index, int dimensions, fft_real_t *data){
     }
     data[i] = h;
   }
+}
+
+// classic Black-Scholes option pricing model
+double black_scholes_option(double S,double K,double sigma,double t,double r, bool isCall){
+  double d1,d2;
+  d1 = (log(S/K) + t*(r+sigma*sigma*0.5)) / (sigma*sqrt(t));
+  d2 = d1 - sigma*sqrt(t);
+  double C = S * normal_cdf(d1) - K * normal_cdf(d2) * exp(-r * t);
+  if (isCall)
+    return C;
+  double P = C - S + K*exp(-r * t);
+  return P;
 }

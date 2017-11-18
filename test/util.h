@@ -2,16 +2,17 @@
 Various utility functions (mostly finance rleated) used in
 test programs.
 
-Roy Zywina, (c) 2017
+Roy Zywina, (c) 2017, MIT licence (https://opensource.org/licenses/MIT)
 */
 
 #ifndef _TEST_UTIL_H_
 #define _TEST_UTIL_H_
 
-#include <cfftpack/cfftpack.h>
 #include <stdint.h>
+#include <stdbool.h>
+#include <cfftpack/cfftpack.h>
 
-#ifdef _cplusplus
+#ifdef __cplusplus
 extern "C"{
 #endif
 
@@ -39,8 +40,10 @@ Code based on Jackel's "Monte Carlo Methods in Finance", 2003
 */
 void halton_sequence(unsigned int index, int dimensions, fft_real_t *data);
 
+// classic Black-Scholes option pricing model
+double black_scholes_option(double S,double K,double sigma,double t,double r, bool isCall);
 
-#ifdef _cplusplus
+#ifdef __cplusplus
 }; // extern "C"
 #endif
 

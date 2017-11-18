@@ -69,8 +69,8 @@ void naive_dct2(int N, const fft_real_t *x, fft_real_t *y, bool ortho){
   }
   if (ortho){
     fft_real_t m0,m;
-    m0 = sqrt(1.0/(4.0*N));
-    m  = sqrt(1.0/(2.0*N));
+    m0 = sqrt(1.0/N);
+    m  = 2*sqrt(1.0/(2.0*N));
     y[0]*=m0;
     for (n=1; n<N; n++)
       y[n] *= m;
