@@ -5,6 +5,7 @@
 #include <time.h>
 #include <cfftpack/cfftpack.h>
 #include <cfftpack/cfftextra.h>
+#include <complex.h>
 #include "naivepack.h"
 #include "util.h"
 
