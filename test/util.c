@@ -1,11 +1,12 @@
 
+#include "util.h"
+
 #include <time.h>
 #include <stdio.h>
 #include <float.h>
 #include <stdint.h>
 #include <math.h>
 
-#include "util.h"
 
 static uint32_t xorshift_state = 12345678;
 

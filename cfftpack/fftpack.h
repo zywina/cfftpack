@@ -48,13 +48,10 @@ This code is in the public domain.
 #ifndef _FFTPACK_H_
 #define _FFTPACK_H_
 
-#ifdef __cplusplus
-// most c++ compilers break if <complex.h> is included before <complex>
-//#include <complex>
+#ifndef _USE_MATH_DEFINES
+ #define _USE_MATH_DEFINES
 #endif
-
 #include <math.h>
-//#include <complex.h>
 #include <stdlib.h>
 
 #ifdef __cplusplus
