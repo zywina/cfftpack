@@ -344,6 +344,15 @@ int dst_inverse(fft_t *f, fft_real_t *data){
   sinq1b_(&f->n, &f->inc, data, &f->n, f->save, &f->lensav, f->work, &f->lenwork, &ier);
   if (ier)
     return ier;
+  if (f->ortho){
+    fft_real_t m0,m;
+    m0 = sqrt(1.0/f->n);
+    m  = sqrt(2.0/f->n);
+    data[0]*=m0;
+    int n;
+    for (n=1; n<f->n; n++)
+      data[n] *= m;
+  }
   return 0;
 }
 

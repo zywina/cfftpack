@@ -56,11 +56,13 @@ void test2(){
   data[1]=1;
   //data[2]=-1;
   for (i=0; i<N; i++){
-    data[i] = rand_normal();
+    data[i] = 0;//1+i;//rand_normal();
+    //if (i>0) data[i]+=data[i-1];
     //data[i] = cos(i*0.22+0.334) + sin(i*0.14+2.2);
     //data[i] = i*i+1;//pow(i+1,1);
     //data[i]=1;
   }
+  data[0]=1;
   //data[0] = data[N-1]=0;
   for (i=0; i<N; i++){
     data4[i]=data3[i]=data2[i]=data1[i]=data[i];
@@ -68,21 +70,28 @@ void test2(){
   fft_t *f = dct_create(N);
   fft_t *f2 = dct1_create(N);
   fft_t *f4 = dct4_create(N);
+  fft_t *st = dst_create(N);
 
   int ortho = 0;
-
+  bool bortho = ortho!=0 ? true:false;
   fft_ortho(f, false);
   fft_ortho(f2, ortho>0 ? false : true);
   fft_ortho(f4, true);
+
+  fft_ortho(st, bortho);
 
 
   //dct_inverse(f, data2);
   //dct_forward(f, data2);
   //naive_dct4(N, data, data1, ortho);
   //naive_dct2(N, data, data1, ortho);
-  naive_dct1(N, data, data1, ortho);
+  //naive_dct1(N, data, data1, ortho);
+  naive_dst3(N, data, data1, bortho);
+
   //dct4_forward(f4, data2);
-  dct1_forward(f2, data2);
+  //dct1_forward(f2, data2);
+  dst_forward(st, data2);
+  //dst_inverse(st, data2);
 
   for (i=0; i<N; i++){
     data3[i] = data1[i];
@@ -91,18 +100,24 @@ void test2(){
 
   //naive_dct4(N, data1, data3, -ortho);
   //naive_dct3(N, data1, data3, ortho);
-  naive_dct1(N, data1, data3, -ortho);
+  //naive_dct1(N, data1, data3, -ortho);
+  naive_dst2(N, data1, data3, bortho);
 
   //dct_forward(f, data4);
   //dct_inverse(f, data4);
   //dct4_inverse(f4, data4);
-  dct1_inverse(f2, data4);
+  //dct1_inverse(f2, data4);
+  //dst_forward(st, data4);
+  dst_inverse(st, data4);
 
   fft_free(f);
   fft_free(f2);
   fft_free(f4);
+  fft_free(st);
 
   //dct_inverse(f, data);
+  printf("%3s  %15s %15s %15s %15s %19s\n",
+    "N","Naive","Fast","iNaive","iFast","Difference");
   for (i=0; i<N; i++){
     //data4[i]*=N;
     printf("%3d: %15.8f %15.8f %15.8f %15.8f %19.10e\n",

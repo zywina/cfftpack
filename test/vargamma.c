@@ -68,7 +68,7 @@ double conv_bsvg_option(int n,double S,double K,
   if (isBS)
     drift = r-0.5*sigma*sigma;
   else
-    drift =  0.5*sqrt(theta*theta+2*sigma*sigma/kappa) - 0.5*theta;
+    drift =  r+(1.0/kappa)*log(1.0-sigma*sigma*kappa/2.0-theta*kappa);
   //drift=r+theta;
   for (i=0; i<N2+1; i++){
     u = i*du;
@@ -78,9 +78,17 @@ double conv_bsvg_option(int n,double S,double K,
       psi = -0.5*sigma*sigma*u*u*t + I*u*t*drift;
       phi = cexp(psi);
     }else{
+      /*
+      const complex<double> i(0,1);
+      complex<double> psi = -log(1.0+sigma*sigma*u*u/2.0-i*mu*kappa*u)/kappa;
+      return exp(psi*dt);
+      */
       // VG characteristic exponent
-      psi = 1.0 + sigma*sigma*kappa*u*u/2.0 - I*theta*kappa*u;
-      phi = cpow(psi, -t/kappa);
+      //psi = -I*theta*u;
+      double _Complex tmp = 1.0+sigma*sigma*kappa*u*u/2.0-I*theta*kappa*u;
+      phi = cpow(tmp, -t/kappa) * cexp(I*drift*u*t);
+    //)/kappa;
+      //phi = cexp(psi*t);
       //psi = -clog(1.0+sigma*sigma*u*u*kappa/2.0-J*theta*kappa*u)/kappa;
       //phi = cexp(psi*t-0.5*sigma*sigma*u*u*t + J*u*t*drift);
     }
@@ -94,7 +102,7 @@ double conv_bsvg_option(int n,double S,double K,
 
   // return option value
   double value = V[N2] * exp(-r*t);
-
+  //printf("df %f\n", exp(-r*t));
   free(V);
   free(v);
 
@@ -107,10 +115,11 @@ void run_tests(){
   sigma = 0.12;
   theta = -0.14;
   kappa = 0.2;
-  r = 0.1;
+  r = 0.05;
   t = 1;
-  K = 100;
-  double target = 11.37002;
+  K = 98;
+  // generated from QuantLib, see vargammaql.cpp
+  double VGtarget = 9.3424659413582116;
 
   printf("\nStock Option Pricing Benchmark\n\n");
   printf("Stock Price: $ %.2f\n", S);
@@ -136,7 +145,7 @@ void run_tests(){
   }
   printf("\n\n");
 
-  printf("Variance Gamma Target: %.12f\n", target);
+  printf("Variance Gamma Target from QuantLib: %.12f\n", VGtarget);
 
   printf("\n%10s%20s%20s%12s\n",
     "N","CONV VG Price","Error","Time");
@@ -147,7 +156,7 @@ void run_tests(){
     C = conv_bsvg_option(n,S,K,sigma,theta,kappa,t,r,true,false);
     end = clock();
     dt = (double)(end-start) / (double)CLOCKS_PER_SEC;
-    printf ("%10d%20.12f%20.12f%12f\n",n,C,C-CBS,dt);
+    printf ("%10d%20.12f%20.12f%12f\n",n,C,C-VGtarget,dt);
   }
   printf("\n\n");
 }

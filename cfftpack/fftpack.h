@@ -49,7 +49,7 @@ This code is in the public domain.
 #define _FFTPACK_H_
 
 #ifndef _USE_MATH_DEFINES
- #define _USE_MATH_DEFINES
+#define _USE_MATH_DEFINES
 #endif
 #include <math.h>
 #include <stdlib.h>
@@ -69,8 +69,8 @@ extern "C"{
 
 /*
 This type is binary compatable with C's "double _Complex" or
-C++'s "std::complex<double>" or simple an array of length 2*N of
-double. (or float if you redefine fft_Real_t)
+C++'s "std::complex<double>" or an array of length 2*N of
+double. (or float if you redefine fft_real_t)
 */
 typedef struct{
   fft_real_t r;
@@ -131,16 +131,16 @@ int cosq1b_(int *n, int *inc, fft_real_t *x, int *lenx,
 
 // DST 2 and 3 (aka DST and IDST)
 
-/// IDST
+/// DST (DST-III)
 int sinq1b_(int *n, int *inc, fft_real_t *x, int *lenx,
     fft_real_t *wsave, int *lensav, fft_real_t *work, int *lenwrk, int *ier);
-/// DST
+/// IDST (DST-II)
 int sinq1f_(int *n, int *inc, fft_real_t *x, int *lenx,
     fft_real_t *wsave, int *lensav, fft_real_t *work, int *lenwrk, int *ier);
-// initialize constants for #sinq1b_ and #sinq1f
+/// initialize constants for #sinq1b_ and #sinq1f
 int sinq1i_(int *n, fft_real_t *wsave, int *lensav, int *ier);
 
-
+/*
 int cosqmb_(int *lot, int *jump, int *n, int
 	*inc, fft_real_t *x, int *lenx, fft_real_t *wsave, int *lensav, fft_real_t *
 	work, int *lenwrk, int *ier);
@@ -148,7 +148,7 @@ int cosqmf_(int *lot, int *jump, int *n, int
   *inc, fft_real_t *x, int *lenx, fft_real_t *wsave, int *lensav, fft_real_t *
   work, int *lenwrk, int *ier);
 int cosqmi_(int *n, fft_real_t *wsave, int *lensav,int *ier);
-
+*/
 
 int rfft1i_(int *n, fft_real_t *wsave, int *lensav, int *ier);
 int rfft1f_(int *n, int *inc, fft_real_t *r__, int *

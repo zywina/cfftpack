@@ -238,7 +238,7 @@ While the real input can have any size the complex output must be of length
 (N/2+1) complex numbers. This is one or two float/doubles longer than the input.
 The fortran code tries to save a little memory by skipping the first imaginary
 number in the output (which is always 0) so the output array is in a format that
-is hard to deal with. This has been modified so you can directly write to an
+is hard to deal with. This has been modified so you can directly write to a
 complex typed array.
 
 Due to the moving around of parameters and different types, this is the only
