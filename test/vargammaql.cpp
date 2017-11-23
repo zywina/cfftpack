@@ -2,7 +2,9 @@
 Variance Gamma Vanilla Option pricing benchmark. I'm using this to generate
 a target value to try to match. There is a small difference between the numbers
 our two implementations converge to. It's not clear who is right or wrong as
-there is no numerically perfect solution for this calculation.
+there is no numerically perfect solution for this calculation, but I believe
+the FFT methodology to be superior. Both QuantLib and my results are more than
+accurate enough to trade on.
 
 Roy Zywina, (c) 2017, MIT licence (https://opensource.org/licenses/MIT)
 */
@@ -43,9 +45,8 @@ void vargamma_test(){
 
   Settings::instance().evaluationDate() = valuation;
 
-  Handle<YieldTermStructure> dividend(
-    boost::shared_ptr<YieldTermStructure>(
-      new FlatForward(valuation,0.0,discountCounter)));
+  Handle<YieldTermStructure> dividend(boost::shared_ptr<YieldTermStructure>(
+    new FlatForward(valuation,0.0,discountCounter)));
   Handle<YieldTermStructure> disc(boost::shared_ptr<YieldTermStructure>(
     new FlatForward(valuation,0.05,discountCounter)));
 

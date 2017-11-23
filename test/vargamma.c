@@ -1,6 +1,7 @@
 /*
 Price vanilla stock options using the FFT convolution method and compare with
-the Black-Scholes formula.
+the Black-Scholes formula and an approximation of Variance Gamma option
+pricing from QuantLib.
 
 Roy Zywina, (c) 2017, MIT licence (https://opensource.org/licenses/MIT)
 */
@@ -29,8 +30,11 @@ The code used here is based on a simplified presentation of
 the algorithm (Zywina 201x) (link)
 
 Converted to RFFT to maximize performance. I also notice a
-speed difference between C's "double _Complex" and C++'s
+speed improvement with C's "double _Complex" over C++'s
 "std::complex<double>".
+
+Hirsa & Madan, 2001, "Pricing American Otions Under Variance Gamma" is
+the source for my characteristic function and drift equations.
 */
 double conv_bsvg_option(int n,double S,double K,
   double sigma,double theta,double kappa,
@@ -78,19 +82,9 @@ double conv_bsvg_option(int n,double S,double K,
       psi = -0.5*sigma*sigma*u*u*t + I*u*t*drift;
       phi = cexp(psi);
     }else{
-      /*
-      const complex<double> i(0,1);
-      complex<double> psi = -log(1.0+sigma*sigma*u*u/2.0-i*mu*kappa*u)/kappa;
-      return exp(psi*dt);
-      */
-      // VG characteristic exponent
-      //psi = -I*theta*u;
+      // variance gamma
       double _Complex tmp = 1.0+sigma*sigma*kappa*u*u/2.0-I*theta*kappa*u;
       phi = cpow(tmp, -t/kappa) * cexp(I*drift*u*t);
-    //)/kappa;
-      //phi = cexp(psi*t);
-      //psi = -clog(1.0+sigma*sigma*u*u*kappa/2.0-J*theta*kappa*u)/kappa;
-      //phi = cexp(psi*t-0.5*sigma*sigma*u*u*t + J*u*t*drift);
     }
 
     v[i] *= phi;
