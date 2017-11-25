@@ -140,30 +140,22 @@ int sinq1f_(int *n, int *inc, fft_real_t *x, int *lenx,
 /// initialize constants for #sinq1b_ and #sinq1f
 int sinq1i_(int *n, fft_real_t *wsave, int *lensav, int *ier);
 
-/// DST (DST-III)
+/// DST (DST-I)
 int sint1b_(int *n, int *inc, fft_real_t *x, int *lenx,
     fft_real_t *wsave, int *lensav, fft_real_t *work, int *lenwrk, int *ier);
-/// IDST (DST-II)
+/// IDST (DST-I)
 int sint1f_(int *n, int *inc, fft_real_t *x, int *lenx,
     fft_real_t *wsave, int *lensav, fft_real_t *work, int *lenwrk, int *ier);
-/// initialize constants for #sinq1b_ and #sinq1f
+/// initialize constants for #sint1b_ and #sint1f
 int sint1i_(int *n, fft_real_t *wsave, int *lensav, int *ier);
 
-
-/*
-int cosqmb_(int *lot, int *jump, int *n, int
-	*inc, fft_real_t *x, int *lenx, fft_real_t *wsave, int *lensav, fft_real_t *
-	work, int *lenwrk, int *ier);
-int cosqmf_(int *lot, int *jump, int *n, int
-  *inc, fft_real_t *x, int *lenx, fft_real_t *wsave, int *lensav, fft_real_t *
-  work, int *lenwrk, int *ier);
-int cosqmi_(int *n, fft_real_t *wsave, int *lensav,int *ier);
-*/
-
+/// RFFT init
 int rfft1i_(int *n, fft_real_t *wsave, int *lensav, int *ier);
+/// RFFT
 int rfft1f_(int *n, int *inc, fft_real_t *r__, int *
 	lenr, fft_real_t *wsave, int *lensav, fft_real_t *work, int *lenwrk,
 	int *ier);
+/// IRFFT
 int rfft1b_(int *n, int *inc, fft_real_t *r__, int *
 	lenr, fft_real_t *wsave, int *lensav, fft_real_t *work, int *lenwrk,
 	int *ier);

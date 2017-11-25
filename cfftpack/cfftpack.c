@@ -331,7 +331,22 @@ int dst_forward(fft_t *f, fft_real_t *data){
   if (!f || !data)
     return -1;
   int ier=0;
+  if (f->ortho){
+    fft_real_t m0,m;
+    m0 = sqrt(1.0/f->n);
+    m  = sqrt(0.5/f->n);
+    data[0]*=m0;
+    int n;
+    for (n=1; n<f->n; n++)
+      data[n] *= m;
+  }
   sinq1f_(&f->n, &f->inc, data, &f->n, f->save, &f->lensav, f->work, &f->lenwork, &ier);
+  if (f->ortho){
+    fft_real_t m = f->n;
+    int n;
+    for (n=0; n<f->n; n++)
+      data[n] *= m;
+  }
   if (ier)
     return ier;
   return 0;

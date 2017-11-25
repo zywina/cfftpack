@@ -62,7 +62,7 @@ Matlab uses orthonormal scaling for everything and FFTW ommits it entirely.
 
 If this is set to false (default)
 we use FFTPACK's standard scaling for each algorithm. When set to true we will
-convert to orthonormal scaling where available.
+convert to orthonormal scaling on transforms that support it.
 */
 void fft_ortho(fft_t *f, bool ortho);
 
@@ -94,7 +94,7 @@ fft_t *fft_create(int size);
 @brief forward inplace discrete Fourier transform
 @param f work object created with #fft_create
 @param data pointer to array of complex numbers. binary compatable with
-  (fft_reat_t _Complex*) or (std::complex<fft_real_t> *)
+  (fft_reat_t _Complex*) or (std::complex<fft_real_t> *) of fft_complex_t
 @return zero on success, nonzero on error.
 
 Forward discrete Fourier transform (FFT). By default (with orthonormal scaling off)
@@ -212,7 +212,7 @@ int dct1_inverse(fft_t *f, fft_real_t *data);
 @param size length of array
 
 In FFTPACK forward DST is DST-III and inverse is DST-II. This varies from
-most other implementations.
+most other implementations which define this in reverse order.
 
 Free memory with #fft_free when finished.
 */
@@ -241,7 +241,8 @@ such as in scipy.fftpack.
 
 This is the only transform that doesn't operate inplace (though it does in the
 underlying code) due to the input and output types being different. The input
-and ouput pointers are allowed to be the same if you really want that.
+and ouput pointers are allowed to be the same if you really want that (you
+probably dont).
 
 While the real input can have any size the complex output must be of length
 (N/2+1) complex numbers. This is one or two float/doubles longer than the input.

@@ -68,9 +68,13 @@ void heat_test(int n){
       // charictaristic function of brownian motion
       double u = du*i;
       double k = Kcu; // adjust for size of step
-      complex<double> m = exp(-4*M_PI*u*u*k*dt);
-      //cout <<i<<", "<<m<<endl;
+      complex<double> m = exp(-4*M_PI*M_PI*u*u*k*dt*dx);
+        //exp(-2*M_PI*u*(2*M_PI*u*k*dt+I*dx));
+      cout <<i<<", "<<m; //<<endl;
+      cout <<freq[i];
       freq[i] *= m;
+      cout <<", "<<freq[i]<<endl;
+      //complex<double> d2 = -freq[i];
     }
     // move back to signal plane
     tcase[j].resize(N);
@@ -93,6 +97,6 @@ void heat_test(int n){
 }
 
 int main(){
-  heat_test(256*4);
+  heat_test(500);
   return 0;
 }

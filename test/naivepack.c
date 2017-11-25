@@ -155,9 +155,33 @@ void naive_ifft(int n, const fft_real_t _Complex *x, fft_real_t _Complex *y, boo
   }
 }
 
+void naive_dst1(int n, const fft_real_t *x, fft_real_t *y, int mode){
+  int N = n-1;
+  double m;
+  if (mode>0){
+    // full scale on forward
+    m = 2.0/N;
+  }else if (mode<0){
+    // unscaled reverse
+    m = 1;
+  }else{
+    // normalized
+    m = sqrt(2.0/N);
+  }
+  int j,k;
+  for (k=0; k<N; k++){
+    y[k]=0;
+    for (j=0; j<N; j++){
+      y[k] += x[j] * sin((n+0.5)*(k+1.0)*M_PI/(N));
+    }
+  }
+
+}
+
 
 void naive_dst2(int N, const fft_real_t *x, fft_real_t *y, bool ortho){
   int n,k;
+  fft_real_t m0 = sqrt(1.0/(N));
   for (k=0; k<N; k++){
     y[k]=0;
     for (n=0; n<N; n++){
@@ -166,41 +190,35 @@ void naive_dst2(int N, const fft_real_t *x, fft_real_t *y, bool ortho){
   }
   if (ortho){
     fft_real_t m0,m;
-    m0 = sqrt(1.0/N);
-    m  = sqrt(2.0/N);
+    m0 = sqrt(1.0/(N));
+    m  = 2*sqrt(1.0/(2*N));
     y[0]*=m0;
     for (n=1; n<N; n++)
       y[n] *= m;
   }
 }
 
-void naive_dst3(int N, const fft_real_t *x, fft_real_t *y, bool ortho){
+void naive_dst3(int N, fft_real_t *x, fft_real_t *y, bool ortho){
   int n,k;
+  fft_real_t mul = 2.0/N;
+  if (ortho){
+    // normalize the input instead of the output...
+    fft_real_t m0,m;
+    m0 = sqrt(1.0/N);
+    m = sqrt(0.5/N);
+    x[0]*=m0;
+    for (n=1; n<N; n++)
+      x[n] *= m;
+    mul = 2;
+  }
   fft_real_t xn = x[N-1] * 0.5;
-
   for (k=0; k<N; k++){
     y[k] = k%2==0 ? xn : -xn;
     for (n=0; n<N-1; n++){
       y[k] += x[n] * sin((n+1.0)*(k+0.5)*M_PI/(N));
     }
-    //y[k] *= m;
+    y[k] *= mul;
   }
-  if (ortho){
-    fft_real_t m0,m;
-    m0 = sqrt(2.0/N);
-    m  = sqrt(1.0/N);
-    y[0]*=m0;
-    for (n=1; n<N; n++)
-      y[n] *= m;
-  }else{
-    fft_real_t m = 2.0 / N;
-    for (n=0; n<N; n++)
-      y[n] *= m;
-  }
-  //if (!ortho){
-    //printf ("factor %f\n", m);
-    //for (n=0; n<N; n++){
-    //  y[k] *= m;
-    //}
-  //}
+
+
 }
