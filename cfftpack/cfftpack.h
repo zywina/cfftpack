@@ -23,16 +23,7 @@ performance, you should look at FFTW instead.
 #ifndef _CFFTPACK_H_
 #define _CFFTPACK_H_
 
-#ifdef __cplusplus
-/* most c++ compilers break if <complex.h> is included before <complex> and you
-can't use the _Complex types directly in a cpp file but you can cast to them if
-the math is done in a c file. This divergence in C/C++ standards is very annoying
-because C's "double _Complex" is much faster than C++'s "std::complex<double>" */
-//#include <complex>
-#endif
-
 #include <math.h>
-//#include <complex.h>
 #include <stdlib.h>
 #include <stdbool.h>
 
@@ -216,10 +207,28 @@ If orthonormal scaling is enabled this function behaves identical to #dct1_forwa
 */
 int dct1_inverse(fft_t *f, fft_real_t *data);
 
+/**
+@brief create work object for DST 2 and 3 transforms
+@param size length of array
 
+In FFTPACK forward DST is DST-III and inverse is DST-II. This varies from
+most other implementations.
+
+Free memory with #fft_free when finished.
+*/
 fft_t *dst_create(int size);
+
+/// DST-III transform
 int dst_forward(fft_t *f, fft_real_t *data);
+/// DST-II transform
 int dst_inverse(fft_t *f, fft_real_t *data);
+
+
+fft_t *dst1_create(int size);
+/// DST-I transform
+int dst1_forward(fft_t *f, fft_real_t *data);
+/// DST-I transform
+int dst1_inverse(fft_t *f, fft_real_t *data);
 
 
 /**

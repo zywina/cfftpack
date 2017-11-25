@@ -3,8 +3,8 @@ Variance Gamma Vanilla Option pricing benchmark. I'm using this to generate
 a target value to try to match. There is a small difference between the numbers
 our two implementations converge to. It's not clear who is right or wrong as
 there is no numerically perfect solution for this calculation, but I believe
-the FFT methodology to be superior. Both QuantLib and my results are more than
-accurate enough to trade on.
+the FFT methodology to be superior based on the convergence to Black-Scholes.
+Both QuantLib and my results are more than accurate enough to trade on.
 
 Roy Zywina, (c) 2017, MIT licence (https://opensource.org/licenses/MIT)
 */

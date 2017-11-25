@@ -140,6 +140,16 @@ int sinq1f_(int *n, int *inc, fft_real_t *x, int *lenx,
 /// initialize constants for #sinq1b_ and #sinq1f
 int sinq1i_(int *n, fft_real_t *wsave, int *lensav, int *ier);
 
+/// DST (DST-III)
+int sint1b_(int *n, int *inc, fft_real_t *x, int *lenx,
+    fft_real_t *wsave, int *lensav, fft_real_t *work, int *lenwrk, int *ier);
+/// IDST (DST-II)
+int sint1f_(int *n, int *inc, fft_real_t *x, int *lenx,
+    fft_real_t *wsave, int *lensav, fft_real_t *work, int *lenwrk, int *ier);
+/// initialize constants for #sinq1b_ and #sinq1f
+int sint1i_(int *n, fft_real_t *wsave, int *lensav, int *ier);
+
+
 /*
 int cosqmb_(int *lot, int *jump, int *n, int
 	*inc, fft_real_t *x, int *lenx, fft_real_t *wsave, int *lensav, fft_real_t *

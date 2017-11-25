@@ -40,10 +40,11 @@ double conv_bsvg_option(int n,double S,double K,
   double sigma,double theta,double kappa,
   double t,double r, bool isCall, bool isBS)
 {
-  int N = fft_next_fast_size(n); // bigger N => lower error
+  int N = fft_next_fast_even_size(n); // bigger N => lower error
   int N2 = N/2;
+  int NC=N2+1;// remember the +1 for the complex array!
   fft_real_t *V = calloc(N,sizeof(fft_real_t));
-  fft_real_t _Complex *v = calloc(N2+1,sizeof(fft_real_t _Complex));
+  fft_real_t _Complex *v = calloc(NC,sizeof(fft_real_t _Complex));
   double L = 2*10*sigma*sqrt(t);
   double ds = L / N;
   double du = 2 * M_PI / (ds * N);
@@ -74,7 +75,7 @@ double conv_bsvg_option(int n,double S,double K,
   else
     drift =  r+(1.0/kappa)*log(1.0-sigma*sigma*kappa/2.0-theta*kappa);
   //drift=r+theta;
-  for (i=0; i<N2+1; i++){
+  for (i=0; i<NC; i++){
     u = i*du;
     //phi = cexp(psi*t);
     if (isBS){
@@ -123,7 +124,7 @@ void run_tests(){
   printf("Time to Exercise: %f years\n", t);
 
   double CBS = black_scholes_option(S,K,sigma,t,r,true);
-  printf("Black Scholes Formula: %.12f\n", CBS);
+  printf("\nBlack Scholes Formula: %.12f\n", CBS);
 
   printf("\n%10s%20s%20s%12s\n",
     "N","CONV BS Price","Error","Time");
