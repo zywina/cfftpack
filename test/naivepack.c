@@ -156,24 +156,25 @@ void naive_ifft(int n, const fft_real_t _Complex *x, fft_real_t _Complex *y, boo
 }
 
 void naive_dst1(int n, const fft_real_t *x, fft_real_t *y, int mode){
-  int N = n-1;
+  int N = n;
   double m;
   if (mode>0){
     // full scale on forward
-    m = 2.0/N;
+    m = 2.0/(N+1);
   }else if (mode<0){
     // unscaled reverse
     m = 1;
   }else{
     // normalized
-    m = sqrt(2.0/N);
+    m = sqrt(2.0/(N+1));
   }
   int j,k;
   for (k=0; k<N; k++){
     y[k]=0;
     for (j=0; j<N; j++){
-      y[k] += x[j] * sin((n+0.5)*(k+1.0)*M_PI/(N));
+      y[k] += x[j] * sin((j+1.0)*(k+1.0)*M_PI/(N+1));
     }
+    y[k]*=m;
   }
 
 }

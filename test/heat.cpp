@@ -39,12 +39,12 @@ void heat_test(int n){
   // If we wait long enough the temperature will equalize to
   // 100/8 + 20*7/8 = 30 degrees. But what happens in between?
 
-  int Nf = N/2+1; // remember the +1 when using rfft!!!
-  vector<complex<double> > freq(Nf);
+  //int Nf = N/2+1; // remember the +1 when using rfft!!!
+  vector<complex<double> > freq(N);
 
   double L = 1.0; // diameter of ring in meters
   double dx = L/N; // distance step
-  double du = 2.0 * M_PI / N; // frequency step
+  double du = 2.0 * M_PI / (N); // frequency step
   double dt = 1; // time step in seconds
 
   printf("\nHeat Transfer Test in Copper Ring\n\n");
@@ -52,21 +52,24 @@ void heat_test(int n){
   const int Ncase = 4;
   vector<vector<double> > tcase(Ncase);
   const double DT[Ncase] = {0.5, 1.0, 60.0, 5*60.0};
-  fft_t *f = rfft_create(N);
+  fft_t *f = fft_create(N);
 
   // observe temperature movement over a few time lengths
   for (int j=0; j<Ncase; j++){
     // move to frequency plane
-    rfft_forward(f, ring.data(), freq.data());
+    for (int k=0; k<N; k++)
+      freq[k] = ring[k];
+    fft_forward(f,freq.data());
+    //rfft_forward(f, ring.data(), freq.data());
 
     // set time step
     dt = DT[j];
 
     std::complex<double> I(0,1);
-    for (i = 0; i<Nf; i++){
+    for (i = 0; i<N; i++){
       // the applicaiton of the heat equation looks suspiciously similar to the
       // charictaristic function of brownian motion
-      double u = du*i;
+      double u = du*(i-N/2);
       double k = Kcu; // adjust for size of step
       complex<double> m = exp(-4*M_PI*M_PI*u*u*k*dt*dx);
         //exp(-2*M_PI*u*(2*M_PI*u*k*dt+I*dx));
@@ -78,7 +81,10 @@ void heat_test(int n){
     }
     // move back to signal plane
     tcase[j].resize(N);
-    rfft_inverse(f, freq.data(), tcase[j].data());
+    //rfft_inverse(f, freq.data(), tcase[j].data());
+    fft_inverse(f, freq.data());
+    for (int k=0; k<N; k++)
+      tcase[j][k] = freq[k].real(); // the imaginary numbers "should" all be zero
   }
 
   fft_free(f);

@@ -378,9 +378,9 @@ fft_t *dst1_create(int size){
   memset(f,0,sizeof(fft_t));
 
   f->n = size;
-  f->lensav =  (size << 1) + (int) (log((fft_real_t) (size)) / log(2.0)) + 4;
+  f->lensav =  f->n / 2 + f->n + (int) (log(f->n) / log(2.0)) + 4;
   f->save = (fft_real_t*)malloc(f->lensav * sizeof(fft_real_t));
-  f->lenwork = f->n;
+  f->lenwork = (f->n << 1) + 2;
   f->work = (fft_real_t*)malloc(f->lenwork*sizeof(fft_real_t));
   f->inc = 1;
   f->algo = ALGO_DST1;
@@ -399,10 +399,14 @@ int dst1_forward(fft_t *f, fft_real_t *data){
     return -1;
   if (f->algo != ALGO_DST1)
     return -2;
+  if (f->ortho){
+    return dst1_inverse(f,data);
+  }
   int ier=0;
   sint1f_(&f->n, &f->inc, data, &f->n, f->save, &f->lensav, f->work, &f->lenwork, &ier);
   if (ier)
     return ier;
+
   return 0;
 }
 
@@ -416,12 +420,10 @@ int dst1_inverse(fft_t *f, fft_real_t *data){
   if (ier)
     return ier;
   if (f->ortho){
-    fft_real_t m0,m;
-    m0 = sqrt(1.0/f->n);
-    m  = sqrt(2.0/f->n);
-    data[0]*=m0;
+    fft_real_t m;
+    m  = sqrt(2.0/(f->n+1));
     int n;
-    for (n=1; n<f->n; n++)
+    for (n=0; n<f->n; n++)
       data[n] *= m;
   }
   return 0;
