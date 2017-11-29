@@ -70,6 +70,32 @@ If orthonormal scaling is enabled this function is identical to #dct4_forward
 int dct4_inverse(fft_t *f, fft_real_t *data);
 
 
+/**
+@brief create DST-IV object
+@param size length of arrays, must be divisible by 2
+
+Implements the dst4 algorithm as a mix of two half length dct2 transforms.
+FFTPACK only has the first three of the four main DST variants.
+This transform only accepts even array sizes. DST-IV is it's own inverse
+(much like DST-I) so the two transform functions become identical if orthonormal
+scaling is enabled.
+*/
+fft_t *dst4_create(int size);
+
+/**
+@brief inplace forward DCT-IV transform
+
+If orthonormal scaling is enabled this function is identical to #dct4_inverse
+*/
+int dst4_forward(fft_t *f, fft_real_t *data);
+
+/**
+@brief inplace inverse DCT-IV transform
+
+If orthonormal scaling is enabled this function is identical to #dct4_forward
+*/
+int dst4_inverse(fft_t *f, fft_real_t *data);
+
 
 #ifdef __cplusplus
 }; // extern"C"

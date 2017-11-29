@@ -72,8 +72,9 @@ void test2(){
   fft_t *f4 = dct4_create(N);
   fft_t *st = dst_create(N);
   fft_t *st1 = dst1_create(N);
+  fft_t *st4 = dst4_create(N);
 
-  int ortho =1;
+  int ortho =0;
   bool bortho = ortho!=0 ? true:false;
   fft_ortho(f, false);
   fft_ortho(f2, ortho>0 ? false : true);
@@ -81,6 +82,7 @@ void test2(){
 
   fft_ortho(st, bortho);
   fft_ortho(st1, !bortho);
+  fft_ortho(st4, !bortho);
 
   //dct_inverse(f, data2);
   //dct_forward(f, data2);
@@ -88,12 +90,14 @@ void test2(){
   //naive_dst3(N, data4, data1, ortho);
   //naive_dct1(N, data, data1, ortho);
   //naive_dst3(N, data, data1, bortho);
-  naive_dst1(N, data, data1, ortho);
+  //naive_dst1(N, data, data1, ortho);
+  naive_dst4(N, data, data1, ortho);
   //memcpy(data2,data)
 
   //dct4_forward(f4, data2);
   //dct1_forward(f2, data2);
-  ret = dst1_forward(st1, data2);
+  //ret = dst1_forward(st1, data2);
+  ret = dst4_forward(st4, data2);
   //dst_inverse(st, data2);
   if (ret){
     printf("fwd transform failed %d\n",ret);
@@ -109,14 +113,14 @@ void test2(){
   //naive_dct4(N, data1, data3, -ortho);
   //naive_dct3(N, data1, data3, ortho);
   //naive_dct1(N, data1, data3, -ortho);
-  naive_dst1(N, data1, data3, -ortho);
+  naive_dst4(N, data1, data3, -ortho);
 
   //dct_forward(f, data4);
   //dct_inverse(f, data4);
   //dct4_inverse(f4, data4);
   //dct1_inverse(f2, data4);
   //dst_forward(st, data4);
-  dst1_inverse(st1, data4);
+  dst4_inverse(st4, data4);
 
   fft_free(f);
   fft_free(f2);

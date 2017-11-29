@@ -220,6 +220,26 @@ void naive_dst3(int N, fft_real_t *x, fft_real_t *y, bool ortho){
     }
     y[k] *= mul;
   }
+}
 
-
+void naive_dst4(int N, const fft_real_t *x, fft_real_t *y, int mode){
+  double m;
+  if (mode>0){
+    // full scale on forward
+    m = 2.0/(N);
+  }else if (mode<0){
+    // unscaled reverse
+    m = 1;
+  }else{
+    // normalized
+    m = sqrt(2.0/(N));
+  }
+  int j,k;
+  for (k=0; k<N; k++){
+    y[k]=0;
+    for (j=0; j<N; j++){
+      y[k] += x[j] * sin((j+0.5)*(k+0.5)*M_PI/(N));
+    }
+    y[k]*=m;
+  }
 }

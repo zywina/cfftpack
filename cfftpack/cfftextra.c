@@ -166,3 +166,41 @@ int dct4_inverse(fft_t *f, fft_real_t *data){
   dct4_transform_internal(f,data);
   return 0;
 }
+
+fft_t *dst4_create(int size){
+  if (size<=0 || size%2!=0) return NULL;
+  fft_t *f = dct4_create(size);
+  if (!size) return NULL;
+  f->algo = ALGO_DST4;
+  return f;
+}
+
+
+int dst4_forward(fft_t *f, fft_real_t *data){
+  int ret = dst4_inverse(f,data);
+  if (ret) return ret;
+  if (!f->ortho){
+    // for consistency I apply the scaling on the forward transform
+    fft_real_t m = 2.0/f->n;
+    int i;
+    for (i=0; i<f->n; i++)
+      data[i] *= m;
+  }
+  return 0;
+}
+
+int dst4_inverse(fft_t *f, fft_real_t *data){
+  if (!f || !data) return -1;
+  if (f->algo != ALGO_DST4) return -2;
+  int i,n2=f->n/2;
+  fft_real_t tmp;
+  for (i=0; i<n2; i++){
+    tmp = data[i];
+    data[i] = data[f->n-i-1];
+    data[f->n-i-1] = tmp;
+  }
+  dct4_transform_internal(f,data);
+  for (i=1; i<f->n; i+=2)
+    data[i] = - data[i];
+  return 0;
+}

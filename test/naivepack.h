@@ -37,6 +37,7 @@ void naive_ifft(int n, const fft_real_t _Complex *x, fft_real_t _Complex *y, boo
 void naive_dst1(int n, const fft_real_t *x, fft_real_t *y, int mode);
 void naive_dst2(int n, const fft_real_t *x, fft_real_t *y, bool ortho);
 void naive_dst3(int n,  fft_real_t *x, fft_real_t *y, bool ortho);
+void naive_dst4(int n, const fft_real_t *x, fft_real_t *y, int mode);
 
 
 #ifdef __cplusplus
