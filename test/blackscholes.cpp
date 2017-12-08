@@ -53,7 +53,7 @@ double conv_option(double S,double K,double sigma,double t,double r, bool isCall
   // move to frequency domain
   fft_t *f = fft_create(N);
   fft_forward(f, V);
-  fft_shift(V, N);
+  fftshift(V, N);
 
   // apply charactersitic function for our probability distribution
   complex<double> J(0,1);
@@ -67,7 +67,7 @@ double conv_option(double S,double K,double sigma,double t,double r, bool isCall
   }
 
   // move to value domain
-  fft_shift(V, N);
+  fftshift(V, N);
   fft_inverse(f, V);
   fft_free(f);
 

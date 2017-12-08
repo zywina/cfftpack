@@ -1,10 +1,5 @@
 /*
-Fourier analysis of heat transfer in an insulated ring. This is the initial
-problem Joseph Fourier applied the Fourier series to in the early 1800s.
-The high degree of similarity between this code and the option pricing examples
-here is striking. Especially since most of the FFT option pricing work was
-only done in the last few dacades and is considered exotic and new in the
-financial industry.
+Fourier analysis of heat transfer in an insulated ring. 
 
 Roy Zywina, (c) 2017, MIT licence (https://opensource.org/licenses/MIT)
 */

@@ -30,7 +30,20 @@ int fft_next_fast_even_size(int n){
   return fft_next_fast_size_internal(n,2);
 }
 
-int fft_shift(void *vdata, int n){
+int fftshift(void *vdata, int n){
+  if (!vdata || n<0) return -1;
+  fft_complex_t tmp, *data=(fft_complex_t*)vdata;
+  int i,j,n2 = n/2;
+  for (i=0; i<n2; i++){
+    j = n2+i;
+    tmp = data[i];
+    data[i]=data[j];
+    data[j]=tmp;
+  }
+  return 0;
+}
+
+int ifftshift(void *vdata, int n){
   if (!vdata || n<0) return -1;
   fft_complex_t tmp, *data=(fft_complex_t*)vdata;
   int i,j,n2 = n/2;
@@ -85,6 +98,17 @@ int dct4_transform_internal(fft_t *f, fft_real_t *data){
   y = &f->work[N];
   C1 = f->work;
   C2 = &f->work[N2];
+
+  // trivial cases
+  if (N==1) return 0;
+  if (N==2){
+    const fft_real_t FC2 = cos(0.5*0.5*M_PI/2);
+    const fft_real_t FS2 = sin(0.5*0.5*M_PI/2);
+    temp = FC2 * x[0] + FS2 * x[1];
+    x[1] = FS2 * x[0] - FC2 * x[1];
+    x[0] = temp;
+    return 0;
+  }
 
   // multiply by TN matrix
   for (i=0; i<N2; i++){
@@ -202,5 +226,35 @@ int dst4_inverse(fft_t *f, fft_real_t *data){
   dct4_transform_internal(f,data);
   for (i=1; i<f->n; i+=2)
     data[i] = - data[i];
+  return 0;
+}
+
+
+/*
+Create an N-dimensional DCT transform object. This uses the method
+of repeatedly applying 1D transforms across each dimension. There
+are faster algorithms for higher dimensions these days.
+*/
+fft_t *ndct_create(int *dims,int ndim){
+  if (ndim<=0 || !dims) return NULL;
+  int i;
+  for (i=0; i<ndim; i++)
+    if (dims[i]<=0) return NULL;
+
+  fft_t *f = (fft_t*)malloc(sizeof(fft_t));
+  if (!f) return NULL;
+  memset(f,0,sizeof(fft_t));
+  //f->sub = dct_create(size/2);
+  f->n = ndim;
+  f->algo = ALGO_DCT4;
+  f->inc=1;
+
+}
+
+int ndct_forward(fft_t *f, fft_real_t *data){
+  return 0;
+}
+
+int ndct_inverse(fft_t *f, fft_real_t *data){
   return 0;
 }

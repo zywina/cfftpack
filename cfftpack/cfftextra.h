@@ -41,7 +41,9 @@ int fft_next_fast_even_size(int n);
   or std::complex<fft_real_t>
 @param n array length
 */
-int fft_shift(void *data, int n);
+int fftshift(void *data, int n);
+
+int ifftshift(void *data, int n);
 
 /**
 @brief create DCT-IV object
@@ -95,6 +97,16 @@ int dst4_forward(fft_t *f, fft_real_t *data);
 If orthonormal scaling is enabled this function is identical to #dct4_forward
 */
 int dst4_inverse(fft_t *f, fft_real_t *data);
+
+
+/*
+Create and N-dimensional DCT transform object. This uses the method
+of repeatedly applying 1D transforms across each dimension. There
+are faster algorithms for higher dimensions these days.
+*/
+fft_t *ndct_create(int *dims,int ndim);
+int ndct_forward(fft_t *f, fft_real_t *data);
+int ndct_inverse(fft_t *f, fft_real_t *data);
 
 
 #ifdef __cplusplus

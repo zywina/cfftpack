@@ -46,10 +46,10 @@ int compare_real(int N, const fft_real_t *x, const fft_real_t *y){
   if (sizeof(fft_real_t)==sizeof(float))
     cutoff = 1e-4;
   else
-    cutoff = 5e-14;
+    cutoff = 1e-13;
   int i;
   for (i=0; i<N; i++){
-    printf("%d: %e  %e\n",i,fabs(x[i]-y[i]), cutoff);
+    //printf("%d: %e  %e\n",i,fabs(x[i]-y[i]), cutoff);
     if (fabs(x[i]-y[i]) > cutoff){
       printf("%d: x: %f, y: %f, %e  %e\n",i,x[i],y[i],fabs(x[i]-y[i]), cutoff);
       return -1;
@@ -76,7 +76,8 @@ void test_dct(int N){
 
   int i,ret;
   for (i=0; i<N; i++){
-    a[i] = b[i] = c[i] = d[i] = rand_normal();
+    a[i] = b[i] = c[i] = d[i] = i/(double)N+1;
+    //rand_normal();
   }
   ret = dct_forward(dct,b);
   assert(ret==0);
@@ -114,7 +115,8 @@ void test_dct(int N){
   fft_ortho(dct4, true);
 
   for (i=0; i<N; i++){
-    a[i] = b[i] = c[i] = d[i] = rand_normal();
+    a[i] = b[i] = c[i] = d[i] = i/(double)N+1;
+    //rand_normal();
   }
 
   ret = dct_forward(dct,b);
@@ -159,6 +161,110 @@ void test_dct(int N){
   printf("DCT tests passed\n");
 }
 
+void test_dst(int N){
+  fft_t *dst,*dst1,*dst4;
+  dst = dst_create(N);
+  dst1 = dst1_create(N);
+  dst4 = dst4_create(N);
+  assert(dst!=NULL);
+  assert(dst1!=NULL);
+  assert(dst4!=NULL);
+
+  fft_real_t *a, *b, *c, *d, *e;
+  a = calloc(N,sizeof(fft_real_t));
+  b = calloc(N,sizeof(fft_real_t));
+  c = calloc(N,sizeof(fft_real_t));
+  d = calloc(N,sizeof(fft_real_t));
+  e = calloc(N,sizeof(fft_real_t));
+
+  int i,ret;
+  for (i=0; i<N; i++){
+    a[i] = b[i] = c[i] = d[i] = i/(double)N+1;
+    //rand_normal();
+  }
+  ret = dst_forward(dst,b);
+  assert(ret==0);
+  ret = dst1_forward(dst1,c);
+  assert(ret==0);
+  ret = dst4_forward(dst4,d);
+  assert(ret==0);
+
+  naive_dst3(N, a, e, false);
+  ret = compare_real(N, b, e);
+  assert(ret==0);
+  naive_dst1(N, a, e, 1);
+  ret = compare_real(N, c, e);
+  assert(ret==0);
+  naive_dst4(N, a, e, 1);
+  ret = compare_real(N, d, e);
+  assert(ret==0);
+
+  ret = dst_inverse(dst,b);
+  assert(ret==0);
+  ret = dst1_inverse(dst1,c);
+  assert(ret==0);
+  ret = dst4_inverse(dst4,d);
+  assert(ret==0);
+
+  ret = compare_real(N, b, a);
+  assert(ret==0);
+  ret = compare_real(N, c, a);
+  assert(ret==0);
+  ret = compare_real(N, d, a);
+  assert(ret==0);
+
+  fft_ortho(dst, true);
+  fft_ortho(dst1, true);
+  fft_ortho(dst4, true);
+
+  for (i=0; i<N; i++){
+    a[i] = b[i] = c[i] = d[i] = i/(double)N+1;
+    //rand_normal();
+  }
+
+  ret = dst_forward(dst,b);
+  assert(ret==0);
+  ret = dst1_forward(dst1,c);
+  assert(ret==0);
+  ret = dst4_forward(dst4,d);
+  assert(ret==0);
+
+  naive_dst3(N, a, e, true);
+  ret = compare_real(N, b, e);
+  assert(ret==0);
+  naive_dst1(N, a, e, 0);
+  ret = compare_real(N, c, e);
+  // not yet implemented
+  //assert(ret==0);
+  naive_dst4(N, a, e, 0);
+  ret = compare_real(N, d, e);
+  assert(ret==0);
+
+  ret = dst_inverse(dst,b);
+  assert(ret==0);
+  ret = dst1_inverse(dst1,c);
+  assert(ret==0);
+  ret = dst4_inverse(dst4,d);
+  assert(ret==0);
+
+  ret = compare_real(N, b, a);
+  assert(ret==0);
+  ret = compare_real(N, c, a);
+  assert(ret==0);
+  ret = compare_real(N, d, a);
+  assert(ret==0);
+
+  fft_free(dst);
+  fft_free(dst1);
+  fft_free(dst4);
+  free(a);
+  free(b);
+  free(c);
+  free(d);
+  free(e);
+  printf("DST tests passed\n");
+}
+
 void test_fft(){
 
 }
@@ -167,7 +273,12 @@ void test_fft(){
 
 int main(){
   rand_seed();
+  test_dct(2);
   test_dct(32);
+  test_dct(4*3*5);
+  //test_dst(2);
+  test_dst(32);
+  test_dst(4*3*5);
 
   return 0;
 }
