@@ -237,17 +237,24 @@ are faster algorithms for higher dimensions these days.
 */
 fft_t *ndct_create(int *dims,int ndim){
   if (ndim<=0 || !dims) return NULL;
-  int i;
-  for (i=0; i<ndim; i++)
+  int i,n=0,lensav=0;
+  for (i=0; i<ndim; i++){
     if (dims[i]<=0) return NULL;
+    if (dims[i]>n){
+      n = dims[i];
+      lensav = (n << 1) + (int) (log(n) / log(2.0)) + 4;
+    }
+  }
 
   fft_t *f = (fft_t*)malloc(sizeof(fft_t));
   if (!f) return NULL;
   memset(f,0,sizeof(fft_t));
   //f->sub = dct_create(size/2);
   f->n = ndim;
-  f->algo = ALGO_DCT4;
+  f->algo = ALGO_NDCT;
   f->inc=1;
+  // (*lensav < (*n << 1) + (int) (log((fft_real_t) (*n)) / log(2.0)) + 4)
+
 
 }
 

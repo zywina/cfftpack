@@ -21,5 +21,5 @@ target_link_libraries (test1 cfftpack m)
 add_executable(testall testall.c ${TEST_SRC} util.h util.c)
 target_link_libraries (testall cfftpack m)
 
-add_executable(heat heat.cpp)
-target_link_libraries (heat cfftpack m)
+add_executable(ftest ftest.c)
+target_link_libraries (ftest cfftpack m)

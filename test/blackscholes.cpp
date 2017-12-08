@@ -22,9 +22,9 @@ Price a vanilla option using the convolution method. This allows the use of
 different probability distributions and can be extended to handle securities
 with many exotic features.
 
-This approach was first introduced in Lord et al 2008 (link).
+This approach was first introduced in Lord et al 2008 (https://papers.ssrn.com/sol3/papers.cfm?abstract_id=966046).
 The code used here is based on a simplified presentation of
-the algorithm (Zywina 201x) (link)
+the algorithm (Zywina 201x) (https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2984393)
 
 We can get ~2x speed boost by using rfft instead of fft, but that
 changes things a little. See vargamma.c for example.

@@ -1,6 +1,8 @@
 
 #include "naivepack.h"
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 void naive_dct1(int N, const fft_real_t *x, fft_real_t *y, int mode){
   int n,k;
@@ -32,33 +34,6 @@ void naive_dct1(int N, const fft_real_t *x, fft_real_t *y, int mode){
   y[N-1] *= m0;
 }
 
-void naive_dct1_inv(int N, const fft_real_t *x, fft_real_t *y, bool ortho){
-  int n,k;
-  double m0 = 1;
-  double m = 0.5 / sqrt(N-1.0);
-
-  for (k=0; k<N; k++){
-    y[k]=0;
-    for (n=1; n<N-1; n++){
-      y[k] += m * x[n] * cos((n)*(k)*M_PI/(N-1.0));
-    }
-    y[k] += m0 * (x[0] + (k%2==0 ? 1 : -1)*x[N-1]);
-  }
-  if (ortho){
-    y[0] /= 2;
-    y[N-1] /= 2;
-    double m = sqrt(2.0 / (N-1.0));
-    for (n=0; n<N; n++){
-      y[n] *= m;
-    }
-  }else{
-    //y[0] /= 2;
-    //y[N-1] /= 2;
-    //for (n=0; n<N; n++)
-    //  y[n] *= 2.0 / (N-1.0);
-
-  }
-}
 
 void naive_dct2(int N, const fft_real_t *x, fft_real_t *y, bool ortho){
   int n,k;
@@ -199,8 +174,10 @@ void naive_dst2(int N, const fft_real_t *x, fft_real_t *y, bool ortho){
   }
 }
 
-void naive_dst3(int N, fft_real_t *x, fft_real_t *y, bool ortho){
+void naive_dst3(int N, const fft_real_t *X, fft_real_t *y, bool ortho){
   int n,k;
+  fft_real_t *x = calloc(N,sizeof(fft_real_t));
+  memcpy(x,X,N*sizeof(fft_real_t));
   fft_real_t mul = 2.0/N;
   if (ortho){
     // normalize the input instead of the output...
@@ -220,6 +197,7 @@ void naive_dst3(int N, fft_real_t *x, fft_real_t *y, bool ortho){
     }
     y[k] *= mul;
   }
+  free(x);
 }
 
 void naive_dst4(int N, const fft_real_t *x, fft_real_t *y, int mode){

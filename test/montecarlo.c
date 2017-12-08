@@ -1,14 +1,17 @@
 /*
 An underutalized (largely unknown) property of the DCT-IV transform is
 that it approximates quite closely the PCA of Brownian motion.
-There is a proof of this buried in a little noticed paper (Leobacher 200?)
-and a somewhat more lengthy explanation in (Zywina 201x).
+There is a proof of this buried in a little noticed paper (Leobacher 2012,
+"Fast orthogonal transforms and generation of Brownian paths")
+and a somewhat more lengthy explanation in (Zywina 201x,
+https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3077402).
 
 You can use a low discrepency sequence with DCT-IV to generate Brownian
 motion paths that are extremely evenly distributed among all possible paths,
 leading to rapid convergence in path dependant financial simulations. DCT-II
-also works very well for this but DCT-IV should be a little better in theory.
-In practice they appear to perform about the same.
+also works very well for this as it approximates the Karhunen-Loeve transform
+(KLT) for brownian motion. It's unclear which is superior PCA (DCT-IV) or
+KLT (DCT-II). In practice they appear to perform about the same.
 
 Roy Zywina, (c) 2017, MIT licence (https://opensource.org/licenses/MIT)
 */

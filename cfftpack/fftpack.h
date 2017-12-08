@@ -160,6 +160,17 @@ int rfft1b_(int *n, int *inc, fft_real_t *r__, int *
 	lenr, fft_real_t *wsave, int *lensav, fft_real_t *work, int *lenwrk,
 	int *ier);
 
+/// multi DCT init
+int cosqmi_(int *n, fft_real_t *wsave, int *lensav,int *ier);
+/// multi DCT-III
+int cosqmf_(int *lot, int *jump, int *n, int
+	*inc, fft_real_t *x, int *lenx, fft_real_t *wsave, int *lensav, fft_real_t *
+	work, int *lenwrk, int *ier);
+/// multi DCT-II
+int cosqmb_(int *lot, int *jump, int *n, int
+	*inc, fft_real_t *x, int *lenx, fft_real_t *wsave, int *lensav, fft_real_t *
+	work, int *lenwrk, int *ier);
+
 // some internal bits of the C code that users don't need to see -RZ
 
 enum{

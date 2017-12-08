@@ -25,16 +25,16 @@ Roy Zywina, (c) 2017, MIT licence (https://opensource.org/licenses/MIT)
 /*
 Price a black scholes or variance gamma option using the convolution method.
 
-This approach was first introduced in Lord et al 2008 (link).
+This approach was first introduced in Lord et al 2008 (https://papers.ssrn.com/sol3/papers.cfm?abstract_id=966046).
 The code used here is based on a simplified presentation of
-the algorithm (Zywina 201x) (link)
+the algorithm (Zywina 201x) (https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2984393)
 
 Converted to RFFT to maximize performance. I also notice a
 speed improvement with C's "double _Complex" over C++'s
 "std::complex<double>".
 
 Hirsa & Madan, 2001, "Pricing American Otions Under Variance Gamma" is
-the source for my characteristic function and drift equations.
+the source for my characteristic function and drift equations for VG.
 */
 double conv_bsvg_option(int n,double S,double K,
   double sigma,double theta,double kappa,
@@ -74,10 +74,8 @@ double conv_bsvg_option(int n,double S,double K,
     drift = r-0.5*sigma*sigma;
   else
     drift =  r+(1.0/kappa)*log(1.0-sigma*sigma*kappa/2.0-theta*kappa);
-  //drift=r+theta;
   for (i=0; i<NC; i++){
     u = i*du;
-    //phi = cexp(psi*t);
     if (isBS){
       // black scholes
       psi = -0.5*sigma*sigma*u*u*t + I*u*t*drift;
