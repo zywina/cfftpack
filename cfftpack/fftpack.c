@@ -64,14 +64,14 @@ C     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 #define TRUE_ 1
 #define FALSE_ 0
 
-
+/* unused function, errors to be handled by return code */
 int xerfft_(char *a, int *b, ftnlen c){
-  /* errors to be handled by return code */
   return 0;
 }
 
+// I want to get rid of thes global variables but that would be too much
+// work -RZ
 /* Table of constant values */
-
 static int c__2 = 2;
 static int c__4 = 4;
 static int c__6 = 6;
@@ -2167,14 +2167,14 @@ L120:
 
     if (*lenc < *inc * (*n - 1) + 1) {
 	*ier = 1;
-	xerfft_("CFFT1B ", &c__4, (ftnlen)7);
+	////xerfft_("CFFT1B ", &c__4, (ftnlen)7);
     } else if (*lensav < (*n << 1) + (int) (log((fft_real_t) (*n)) / log(2.0))
 	    + 4) {
 	*ier = 2;
-	xerfft_("CFFT1B ", &c__6, (ftnlen)7);
+	////xerfft_("CFFT1B ", &c__6, (ftnlen)7);
     } else if (*lenwrk < *n << 1) {
 	*ier = 3;
-	xerfft_("CFFT1B ", &c__8, (ftnlen)7);
+	////xerfft_("CFFT1B ", &c__8, (ftnlen)7);
     }
 
     if (*n == 1) {
@@ -2215,14 +2215,14 @@ L120:
 
     if (*lenc < *inc * (*n - 1) + 1) {
 	*ier = 1;
-	xerfft_("CFFT1F ", &c__4, (ftnlen)7);
+	////xerfft_("CFFT1F ", &c__4, (ftnlen)7);
     } else if (*lensav < (*n << 1) + (int) (log((fft_real_t) (*n)) / log(2.0))
 	    + 4) {
 	*ier = 2;
-	xerfft_("CFFT1F ", &c__6, (ftnlen)7);
+	////xerfft_("CFFT1F ", &c__6, (ftnlen)7);
     } else if (*lenwrk < *n << 1) {
 	*ier = 3;
-	xerfft_("CFFT1F ", &c__8, (ftnlen)7);
+	////xerfft_("CFFT1F ", &c__8, (ftnlen)7);
     }
 
     if (*n == 1) {
@@ -2260,7 +2260,7 @@ L120:
 
     if (*lensav < (*n << 1) + (int) (log((fft_real_t) (*n)) / log(2.0)) + 4) {
 	*ier = 2;
-	xerfft_("CFFTMI ", &c__3, (ftnlen)7);
+	////xerfft_("CFFTMI ", &c__3, (ftnlen)7);
     }
 
     if (*n == 1) {
@@ -2309,16 +2309,16 @@ L120:
 
     if (*l > *ldim) {
 	*ier = 5;
-	xerfft_("CFFT2B", &c_n2, (ftnlen)6);
+	////xerfft_("CFFT2B", &c_n2, (ftnlen)6);
 	goto L100;
     } else if (*lensav < (*l << 1) + (int) (log((fft_real_t) (*l)) / log(2.0))
 	    + (*m << 1) + (int) (log((fft_real_t) (*m)) / log(2.0)) + 8) {
 	*ier = 2;
-	xerfft_("CFFT2B", &c__6, (ftnlen)6);
+	////xerfft_("CFFT2B", &c__6, (ftnlen)6);
 	goto L100;
     } else if (*lenwrk < (*l << 1) * *m) {
 	*ier = 3;
-	xerfft_("CFFT2B", &c__8, (ftnlen)6);
+	////xerfft_("CFFT2B", &c__8, (ftnlen)6);
 	goto L100;
     }
 
@@ -2331,7 +2331,7 @@ L120:
 	    work[1], &i__3, &ier1);
     if (ier1 != 0) {
 	*ier = 20;
-	xerfft_("CFFT2B", &c_n5, (ftnlen)6);
+	////xerfft_("CFFT2B", &c_n5, (ftnlen)6);
 	goto L100;
     }
 
@@ -2344,7 +2344,7 @@ L120:
 	    work[1], &i__3, &ier1);
     if (ier1 != 0) {
 	*ier = 20;
-	xerfft_("CFFT2B", &c_n5, (ftnlen)6);
+	////xerfft_("CFFT2B", &c_n5, (ftnlen)6);
     }
 
 L100:
@@ -2389,16 +2389,16 @@ L100:
 
     if (*l > *ldim) {
 	*ier = 5;
-	xerfft_("CFFT2F", &c_n2, (ftnlen)6);
+	//xerfft_("CFFT2F", &c_n2, (ftnlen)6);
 	goto L100;
     } else if (*lensav < (*l << 1) + (int) (log((fft_real_t) (*l)) / log(2.0))
 	    + (*m << 1) + (int) (log((fft_real_t) (*m)) / log(2.0)) + 8) {
 	*ier = 2;
-	xerfft_("CFFT2F", &c__6, (ftnlen)6);
+	//xerfft_("CFFT2F", &c__6, (ftnlen)6);
 	goto L100;
     } else if (*lenwrk < (*l << 1) * *m) {
 	*ier = 3;
-	xerfft_("CFFT2F", &c__8, (ftnlen)6);
+	//xerfft_("CFFT2F", &c__8, (ftnlen)6);
 	goto L100;
     }
 
@@ -2411,7 +2411,7 @@ L100:
 	    work[1], &i__3, &ier1);
     if (ier1 != 0) {
 	*ier = 20;
-	xerfft_("CFFT2F", &c_n5, (ftnlen)6);
+	//xerfft_("CFFT2F", &c_n5, (ftnlen)6);
 	goto L100;
     }
 
@@ -2424,7 +2424,7 @@ L100:
 	    work[1], &i__3, &ier1);
     if (ier1 != 0) {
 	*ier = 20;
-	xerfft_("CFFT2F", &c_n5, (ftnlen)6);
+	//xerfft_("CFFT2F", &c_n5, (ftnlen)6);
     }
 
 L100:
@@ -2464,7 +2464,7 @@ L100:
     if (*lensav < (*l << 1) + (int) (log((fft_real_t) (*l)) / log(2.0)) + (*m <<
 	     1) + (int) (log((fft_real_t) (*m)) / log(2.0)) + 8) {
 	*ier = 2;
-	xerfft_("CFFT2I", &c__4, (ftnlen)6);
+	//xerfft_("CFFT2I", &c__4, (ftnlen)6);
 	goto L100;
     }
 
@@ -2472,7 +2472,7 @@ L100:
     cfftmi_(l, &wsave[1], &i__1, &ier1);
     if (ier1 != 0) {
 	*ier = 20;
-	xerfft_("CFFT2I", &c_n5, (ftnlen)6);
+	//xerfft_("CFFT2I", &c_n5, (ftnlen)6);
 	goto L100;
     }
     i__1 = (*m << 1) + (int) (log((fft_real_t) (*m)) / log(2.0)) + 4;
@@ -2480,7 +2480,7 @@ L100:
 	    , &i__1, &ier1);
     if (ier1 != 0) {
 	*ier = 20;
-	xerfft_("CFFT2I", &c_n5, (ftnlen)6);
+	//xerfft_("CFFT2I", &c_n5, (ftnlen)6);
     }
 
 L100:
@@ -2519,17 +2519,17 @@ L100:
 
     if (*lenc < (*lot - 1) * *jump + *inc * (*n - 1) + 1) {
 	*ier = 1;
-	xerfft_("CFFTMB ", &c__6, (ftnlen)7);
+	//xerfft_("CFFTMB ", &c__6, (ftnlen)7);
     } else if (*lensav < (*n << 1) + (int) (log((fft_real_t) (*n)) / log(2.0))
 	    + 4) {
 	*ier = 2;
-	xerfft_("CFFTMB ", &c__8, (ftnlen)7);
+	//xerfft_("CFFTMB ", &c__8, (ftnlen)7);
     } else if (*lenwrk < (*lot << 1) * *n) {
 	*ier = 3;
-	xerfft_("CFFTMB ", &c__10, (ftnlen)7);
+	//xerfft_("CFFTMB ", &c__10, (ftnlen)7);
     } else if (! xercon_(inc, jump, n, lot)) {
 	*ier = 4;
-	xerfft_("CFFTMB ", &c_n1, (ftnlen)7);
+	//xerfft_("CFFTMB ", &c_n1, (ftnlen)7);
     }
 
     if (*n == 1) {
@@ -2574,17 +2574,17 @@ L100:
 
     if (*lenc < (*lot - 1) * *jump + *inc * (*n - 1) + 1) {
 	*ier = 1;
-	xerfft_("CFFTMF ", &c__6, (ftnlen)7);
+	//xerfft_("CFFTMF ", &c__6, (ftnlen)7);
     } else if (*lensav < (*n << 1) + (int) (log((fft_real_t) (*n)) / log(2.0))
 	    + 4) {
 	*ier = 2;
-	xerfft_("CFFTMF ", &c__8, (ftnlen)7);
+	//xerfft_("CFFTMF ", &c__8, (ftnlen)7);
     } else if (*lenwrk < (*lot << 1) * *n) {
 	*ier = 3;
-	xerfft_("CFFTMF ", &c__10, (ftnlen)7);
+	//xerfft_("CFFTMF ", &c__10, (ftnlen)7);
     } else if (! xercon_(inc, jump, n, lot)) {
 	*ier = 4;
-	xerfft_("CFFTMF ", &c_n1, (ftnlen)7);
+	//xerfft_("CFFTMF ", &c_n1, (ftnlen)7);
     }
 
     if (*n == 1) {
@@ -2624,7 +2624,7 @@ L100:
 
     if (*lensav < (*n << 1) + (int) (log((fft_real_t) (*n)) / log(2.0)) + 4) {
 	*ier = 2;
-	xerfft_("CFFTMI ", &c__3, (ftnlen)7);
+	//xerfft_("CFFTMI ", &c__3, (ftnlen)7);
     }
 
     if (*n == 1) {
@@ -5399,16 +5399,16 @@ L120:
 
     if (*lenx < *inc * (*n - 1) + 1) {
 	*ier = 1;
-	xerfft_("COSQ1B", &c__6, (ftnlen)6);
+	//xerfft_("COSQ1B", &c__6, (ftnlen)6);
 	goto L300;
     } else if (*lensav < (*n << 1) + (int) (log((fft_real_t) (*n)) / log(2.0))
 	    + 4) {
 	*ier = 2;
-	xerfft_("COSQ1B", &c__8, (ftnlen)6);
+	//xerfft_("COSQ1B", &c__8, (ftnlen)6);
 	goto L300;
     } else if (*lenwrk < *n) {
 	*ier = 3;
-	xerfft_("COSQ1B", &c__10, (ftnlen)6);
+	//xerfft_("COSQ1B", &c__10, (ftnlen)6);
 	goto L300;
     }
 
@@ -5429,7 +5429,7 @@ L103:
     cosqb1_(n, inc, &x[x_offset], &wsave[1], &work[1], &ier1);
     if (ier1 != 0) {
 	*ier = 20;
-	xerfft_("COSQ1B", &c_n5, (ftnlen)6);
+	//xerfft_("COSQ1B", &c_n5, (ftnlen)6);
     }
 
 L300:
@@ -5473,16 +5473,16 @@ L300:
 
     if (*lenx < *inc * (*n - 1) + 1) {
 	*ier = 1;
-	xerfft_("COSQ1F", &c__6, (ftnlen)6);
+	//xerfft_("COSQ1F", &c__6, (ftnlen)6);
 	goto L300;
     } else if (*lensav < (*n << 1) + (int) (log((fft_real_t) (*n)) / log(2.0))
 	    + 4) {
 	*ier = 2;
-	xerfft_("COSQ1F", &c__8, (ftnlen)6);
+	//xerfft_("COSQ1F", &c__8, (ftnlen)6);
 	goto L300;
     } else if (*lenwrk < *n) {
 	*ier = 3;
-	xerfft_("COSQ1F", &c__10, (ftnlen)6);
+	//xerfft_("COSQ1F", &c__10, (ftnlen)6);
 	goto L300;
     }
 
@@ -5504,7 +5504,7 @@ L103:
     cosqf1_(n, inc, &x[x_offset], &wsave[1], &work[1], &ier1);
     if (ier1 != 0) {
 	*ier = 20;
-	xerfft_("COSQ1F", &c_n5, (ftnlen)6);
+	//xerfft_("COSQ1F", &c_n5, (ftnlen)6);
     }
 
 L300:
@@ -5541,7 +5541,7 @@ L300:
     *ier = 0;
     if (*lensav < (*n << 1) + (int) (log((fft_real_t) (*n)) / log(2.0)) + 4) {
 	*ier = 2;
-	xerfft_("COSQ1I", &c__3, (ftnlen)6);
+	//xerfft_("COSQ1I", &c__3, (ftnlen)6);
 	goto L300;
     }
 
@@ -5558,7 +5558,7 @@ L300:
     rfft1i_(n, &wsave[*n + 1], &lnsv, &ier1);
     if (ier1 != 0) {
 	*ier = 20;
-	xerfft_("COSQ1I", &c_n5, (ftnlen)6);
+	//xerfft_("COSQ1I", &c_n5, (ftnlen)6);
     }
 L300:
     return 0;
@@ -5622,7 +5622,7 @@ L302:
 	    lnwk, &ier1);
     if (ier1 != 0) {
 	*ier = 20;
-	xerfft_("COSQB1", &c_n5, (ftnlen)6);
+	//xerfft_("COSQB1", &c_n5, (ftnlen)6);
 	goto L400;
     }
 
@@ -5722,7 +5722,7 @@ L303:
 	    lnwk, &ier1);
     if (ier1 != 0) {
 	*ier = 20;
-	xerfft_("COSQF1", &c_n5, (ftnlen)6);
+	//xerfft_("COSQF1", &c_n5, (ftnlen)6);
 	goto L400;
     }
 
@@ -5777,20 +5777,20 @@ L400:
 
     if (*lenx < (*lot - 1) * *jump + *inc * (*n - 1) + 1) {
 	*ier = 1;
-	xerfft_("COSQMB", &c__6, (ftnlen)6);
+	//xerfft_("COSQMB", &c__6, (ftnlen)6);
 	goto L300;
     } else if (*lensav < (*n << 1) + (int) (log((fft_real_t) (*n)) / log(2.0))
 	    + 4) {
 	*ier = 2;
-	xerfft_("COSQMB", &c__8, (ftnlen)6);
+	//xerfft_("COSQMB", &c__8, (ftnlen)6);
 	goto L300;
     } else if (*lenwrk < *lot * *n) {
 	*ier = 3;
-	xerfft_("COSQMB", &c__10, (ftnlen)6);
+	//xerfft_("COSQMB", &c__10, (ftnlen)6);
 	goto L300;
     } else if (! xercon_(inc, jump, n, lot)) {
 	*ier = 4;
-	xerfft_("COSQMB", &c_n1, (ftnlen)6);
+	//xerfft_("COSQMB", &c_n1, (ftnlen)6);
 	goto L300;
     }
 
@@ -5826,7 +5826,7 @@ L103:
     mcsqb1_(lot, jump, n, inc, &x[x_offset], &wsave[1], &work[1], &ier1);
     if (ier1 != 0) {
 	*ier = 20;
-	xerfft_("COSQMB", &c_n5, (ftnlen)6);
+	//xerfft_("COSQMB", &c_n5, (ftnlen)6);
     }
 
 L300:
@@ -5871,20 +5871,20 @@ L300:
 
     if (*lenx < (*lot - 1) * *jump + *inc * (*n - 1) + 1) {
 	*ier = 1;
-	xerfft_("COSQMF", &c__6, (ftnlen)6);
+	//xerfft_("COSQMF", &c__6, (ftnlen)6);
 	goto L300;
     } else if (*lensav < (*n << 1) + (int) (log((fft_real_t) (*n)) / log(2.0))
 	    + 4) {
 	*ier = 2;
-	xerfft_("COSQMF", &c__8, (ftnlen)6);
+	//xerfft_("COSQMF", &c__8, (ftnlen)6);
 	goto L300;
     } else if (*lenwrk < *lot * *n) {
 	*ier = 3;
-	xerfft_("COSQMF", &c__10, (ftnlen)6);
+	//xerfft_("COSQMF", &c__10, (ftnlen)6);
 	goto L300;
     } else if (! xercon_(inc, jump, n, lot)) {
 	*ier = 4;
-	xerfft_("COSQMF", &c_n1, (ftnlen)6);
+	//xerfft_("COSQMF", &c_n1, (ftnlen)6);
 	goto L300;
     }
 
@@ -5912,7 +5912,7 @@ L103:
     mcsqf1_(lot, jump, n, inc, &x[x_offset], &wsave[1], &work[1], &ier1);
     if (ier1 != 0) {
 	*ier = 20;
-	xerfft_("COSQMF", &c_n5, (ftnlen)6);
+	//xerfft_("COSQMF", &c_n5, (ftnlen)6);
     }
 
 L300:
@@ -5950,7 +5950,7 @@ L300:
 
     if (*lensav < (*n << 1) + (int) (log((fft_real_t) (*n)) / log(2.0)) + 4) {
 	*ier = 2;
-	xerfft_("COSQMI", &c__3, (ftnlen)6);
+	//xerfft_("COSQMI", &c__3, (ftnlen)6);
 	goto L300;
     }
 
@@ -5967,7 +5967,7 @@ L300:
     rfftmi_(n, &wsave[*n + 1], &lnsv, &ier1);
     if (ier1 != 0) {
 	*ier = 20;
-	xerfft_("COSQMI", &c_n5, (ftnlen)6);
+	//xerfft_("COSQMI", &c_n5, (ftnlen)6);
     }
 L300:
     return 0;
@@ -6007,16 +6007,16 @@ L300:
     *ier = 0;
     if (*lenx < *inc * (*n - 1) + 1) {
 	*ier = 1;
-	xerfft_("COST1B", &c__6, (ftnlen)6);
+	//xerfft_("COST1B", &c__6, (ftnlen)6);
 	goto L100;
     } else if (*lensav < (*n << 1) + (int) (log((fft_real_t) (*n)) / log(2.0))
 	    + 4) {
 	*ier = 2;
-	xerfft_("COST1B", &c__8, (ftnlen)6);
+	//xerfft_("COST1B", &c__8, (ftnlen)6);
 	goto L100;
     } else if (*lenwrk < *n - 1) {
 	*ier = 3;
-	xerfft_("COST1B", &c__10, (ftnlen)6);
+	//xerfft_("COST1B", &c__10, (ftnlen)6);
 	goto L100;
     }
 
@@ -6027,7 +6027,7 @@ L300:
     costb1_(n, inc, &x[x_offset], &wsave[1], &work[1], &ier1);
     if (ier1 != 0) {
 	*ier = 20;
-	xerfft_("COST1B", &c_n5, (ftnlen)6);
+	//xerfft_("COST1B", &c_n5, (ftnlen)6);
     }
 
 L100:
@@ -6068,16 +6068,16 @@ L100:
     *ier = 0;
     if (*lenx < *inc * (*n - 1) + 1) {
 	*ier = 1;
-	xerfft_("COST1F", &c__6, (ftnlen)6);
+	//xerfft_("COST1F", &c__6, (ftnlen)6);
 	goto L100;
     } else if (*lensav < (*n << 1) + (int) (log((fft_real_t) (*n)) / log(2.0))
 	    + 4) {
 	*ier = 2;
-	xerfft_("COST1F", &c__8, (ftnlen)6);
+	//xerfft_("COST1F", &c__8, (ftnlen)6);
 	goto L100;
     } else if (*lenwrk < *n - 1) {
 	*ier = 3;
-	xerfft_("COST1F", &c__10, (ftnlen)6);
+	//xerfft_("COST1F", &c__10, (ftnlen)6);
 	goto L100;
     }
 
@@ -6088,7 +6088,7 @@ L100:
     costf1_(n, inc, &x[x_offset], &wsave[1], &work[1], &ier1);
     if (ier1 != 0) {
 	*ier = 20;
-	xerfft_("COST1F", &c_n5, (ftnlen)6);
+	//xerfft_("COST1F", &c_n5, (ftnlen)6);
     }
 
 L100:
@@ -6126,7 +6126,7 @@ L100:
 
     if (*lensav < (*n << 1) + (int) (log((fft_real_t) (*n)) / log(2.0)) + 4) {
 	*ier = 2;
-	xerfft_("COST1I", &c__3, (ftnlen)6);
+	//xerfft_("COST1I", &c__3, (ftnlen)6);
 	goto L300;
     }
 
@@ -6151,7 +6151,7 @@ L100:
     rfft1i_(&nm1, &wsave[*n + 1], &lnsv, &ier1);
     if (ier1 != 0) {
 	*ier = 20;
-	xerfft_("COST1I", &c_n5, (ftnlen)6);
+	//xerfft_("COST1I", &c_n5, (ftnlen)6);
     }
 L300:
     return 0;
@@ -6253,7 +6253,7 @@ L124:
 	    lnwk, &ier1);
     if (ier1 != 0) {
 	*ier = 20;
-	xerfft_("COSTB1", &c_n5, (ftnlen)6);
+	//xerfft_("COSTB1", &c_n5, (ftnlen)6);
 	return 0;
     }
 
@@ -6377,7 +6377,7 @@ L124:
 	    lnwk, &ier1);
     if (ier1 != 0) {
 	*ier = 20;
-	xerfft_("COSTF1", &c_n5, (ftnlen)6);
+	//xerfft_("COSTF1", &c_n5, (ftnlen)6);
 	goto L200;
     }
 
@@ -6444,20 +6444,20 @@ L200:
 
     if (*lenx < (*lot - 1) * *jump + *inc * (*n - 1) + 1) {
 	*ier = 1;
-	xerfft_("COSTMB", &c__6, (ftnlen)6);
+	//xerfft_("COSTMB", &c__6, (ftnlen)6);
 	goto L100;
     } else if (*lensav < (*n << 1) + (int) (log((fft_real_t) (*n)) / log(2.0))
 	    + 4) {
 	*ier = 2;
-	xerfft_("COSTMB", &c__8, (ftnlen)6);
+	//xerfft_("COSTMB", &c__8, (ftnlen)6);
 	goto L100;
     } else if (*lenwrk < *lot * (*n + 1)) {
 	*ier = 3;
-	xerfft_("COSTMB", &c__10, (ftnlen)6);
+	//xerfft_("COSTMB", &c__10, (ftnlen)6);
 	goto L100;
     } else if (! xercon_(inc, jump, n, lot)) {
 	*ier = 4;
-	xerfft_("COSTMB", &c_n1, (ftnlen)6);
+	//xerfft_("COSTMB", &c_n1, (ftnlen)6);
 	goto L100;
     }
 
@@ -6466,7 +6466,7 @@ L200:
 	    &ier1);
     if (ier1 != 0) {
 	*ier = 20;
-	xerfft_("COSTMB", &c_n5, (ftnlen)6);
+	//xerfft_("COSTMB", &c_n5, (ftnlen)6);
     }
 
 L100:
@@ -6510,20 +6510,20 @@ L100:
 
     if (*lenx < (*lot - 1) * *jump + *inc * (*n - 1) + 1) {
 	*ier = 1;
-	xerfft_("COSTMF", &c__6, (ftnlen)6);
+	//xerfft_("COSTMF", &c__6, (ftnlen)6);
 	goto L100;
     } else if (*lensav < (*n << 1) + (int) (log((fft_real_t) (*n)) / log(2.0))
 	    + 4) {
 	*ier = 2;
-	xerfft_("COSTMF", &c__8, (ftnlen)6);
+	//xerfft_("COSTMF", &c__8, (ftnlen)6);
 	goto L100;
     } else if (*lenwrk < *lot * (*n + 1)) {
 	*ier = 3;
-	xerfft_("COSTMF", &c__10, (ftnlen)6);
+	//xerfft_("COSTMF", &c__10, (ftnlen)6);
 	goto L100;
     } else if (! xercon_(inc, jump, n, lot)) {
 	*ier = 4;
-	xerfft_("COSTMF", &c_n1, (ftnlen)6);
+	//xerfft_("COSTMF", &c_n1, (ftnlen)6);
 	goto L100;
     }
 
@@ -6532,7 +6532,7 @@ L100:
 	    &ier1);
     if (ier1 != 0) {
 	*ier = 20;
-	xerfft_("COSTMF", &c_n5, (ftnlen)6);
+	//xerfft_("COSTMF", &c_n5, (ftnlen)6);
     }
 
 L100:
@@ -6570,7 +6570,7 @@ L100:
 
     if (*lensav < (*n << 1) + (int) (log((fft_real_t) (*n)) / log(2.0)) + 4) {
 	*ier = 2;
-	xerfft_("COSTMI", &c__3, (ftnlen)6);
+	//xerfft_("COSTMI", &c__3, (ftnlen)6);
 	goto L300;
     }
 
@@ -6595,7 +6595,7 @@ L100:
     rfftmi_(&nm1, &wsave[*n + 1], &lnsv, &ier1);
     if (ier1 != 0) {
 	*ier = 20;
-	xerfft_("COSTMI", &c_n5, (ftnlen)6);
+	//xerfft_("COSTMI", &c_n5, (ftnlen)6);
     }
 L300:
     return 0;
@@ -6770,7 +6770,7 @@ L302:
 	    work[work_offset], &lnwk, &ier1);
     if (ier1 != 0) {
 	*ier = 20;
-	xerfft_("MCSQB1", &c_n5, (ftnlen)6);
+	//xerfft_("MCSQB1", &c_n5, (ftnlen)6);
 	goto L400;
     }
 
@@ -6931,7 +6931,7 @@ L303:
 	    work[work_offset], &lnwk, &ier1);
     if (ier1 != 0) {
 	*ier = 20;
-	xerfft_("MCSQF1", &c_n5, (ftnlen)6);
+	//xerfft_("MCSQF1", &c_n5, (ftnlen)6);
 	goto L400;
     }
 
@@ -7083,7 +7083,7 @@ L124:
 	    work, &lnwk, &ier1);
     if (ier1 != 0) {
 	*ier = 20;
-	xerfft_("MCSTB1", &c_n5, (ftnlen)6);
+	//xerfft_("MCSTB1", &c_n5, (ftnlen)6);
 	goto L106;
     }
 
@@ -7263,7 +7263,7 @@ L124:
 	    work, &lnwk, &ier1);
     if (ier1 != 0) {
 	*ier = 20;
-	xerfft_("MCSTF1", &c_n5, (ftnlen)6);
+	//xerfft_("MCSTF1", &c_n5, (ftnlen)6);
 	goto L200;
     }
 
@@ -10571,7 +10571,7 @@ L124:
 	    lnsv, work, &lnwk, &ier1);
     if (ier1 != 0) {
 	*ier = 20;
-	xerfft_("MSNTB1", &c_n5, (ftnlen)6);
+	//xerfft_("MSNTB1", &c_n5, (ftnlen)6);
 	goto L200;
     }
 
@@ -10727,7 +10727,7 @@ L124:
 	    lnsv, work, &lnwk, &ier1);
     if (ier1 != 0) {
 	*ier = 20;
-	xerfft_("MSNTF1", &c_n5, (ftnlen)6);
+	//xerfft_("MSNTF1", &c_n5, (ftnlen)6);
 	goto L200;
     }
 
@@ -13001,13 +13001,13 @@ L141:
 
     if (*lenr < *inc * (*n - 1) + 1) {
 	*ier = 1;
-	xerfft_("RFFT1B ", &c__6, (ftnlen)7);
+	//xerfft_("RFFT1B ", &c__6, (ftnlen)7);
     } else if (*lensav < *n + (int) (log((fft_real_t) (*n)) / log(2.0)) + 4) {
 	*ier = 2;
-	xerfft_("RFFT1B ", &c__8, (ftnlen)7);
+	//xerfft_("RFFT1B ", &c__8, (ftnlen)7);
     } else if (*lenwrk < *n) {
 	*ier = 3;
-	xerfft_("RFFT1B ", &c__10, (ftnlen)7);
+	//xerfft_("RFFT1B ", &c__10, (ftnlen)7);
     }
 
     if (*n == 1) {
@@ -13047,13 +13047,13 @@ L141:
 
     if (*lenr < *inc * (*n - 1) + 1) {
 	*ier = 1;
-	xerfft_("RFFT1F ", &c__6, (ftnlen)7);
+	//xerfft_("RFFT1F ", &c__6, (ftnlen)7);
     } else if (*lensav < *n + (int) (log((fft_real_t) (*n)) / log(2.0)) + 4) {
 	*ier = 2;
-	xerfft_("RFFT1F ", &c__8, (ftnlen)7);
+	//xerfft_("RFFT1F ", &c__8, (ftnlen)7);
     } else if (*lenwrk < *n) {
 	*ier = 3;
-	xerfft_("RFFT1F ", &c__10, (ftnlen)7);
+	//xerfft_("RFFT1F ", &c__10, (ftnlen)7);
     }
 
     if (*n == 1) {
@@ -13090,7 +13090,7 @@ L141:
 
     if (*lensav < *n + (int) (log((fft_real_t) (*n)) / log(2.0)) + 4) {
 	*ier = 2;
-	xerfft_("RFFT1I ", &c__3, (ftnlen)7);
+	//xerfft_("RFFT1I ", &c__3, (ftnlen)7);
     }
 
     if (*n == 1) {
@@ -13152,7 +13152,7 @@ L141:
 
     if (*lensav < lwsav + mwsav + mmsav) {
 	*ier = 2;
-	xerfft_("RFFT2F", &c__6, (ftnlen)6);
+	//xerfft_("RFFT2F", &c__6, (ftnlen)6);
 	goto L100;
     }
 
@@ -13160,7 +13160,7 @@ L141:
 
     if (*lenwrk < (*l + 1) * *m) {
 	*ier = 3;
-	xerfft_("RFFT2F", &c__8, (ftnlen)6);
+	//xerfft_("RFFT2F", &c__8, (ftnlen)6);
 	goto L100;
     }
 
@@ -13168,7 +13168,7 @@ L141:
 
     if (*ldim < *l) {
 	*ier = 5;
-	xerfft_("RFFT2F", &c_n6, (ftnlen)6);
+	//xerfft_("RFFT2F", &c_n6, (ftnlen)6);
 	goto L100;
     }
 
@@ -13200,7 +13200,7 @@ L141:
 		mwsav, &r__[r_offset], &i__3, &ier1);
 	if (ier1 != 0) {
 	    *ier = 20;
-	    xerfft_("RFFT2B", &c_n5, (ftnlen)6);
+	    //xerfft_("RFFT2B", &c_n5, (ftnlen)6);
 	    goto L100;
 	}
 	w2r_(ldim, &ldw, l, m, &r__[r_offset], &work[1]);
@@ -13255,13 +13255,13 @@ L141:
 
     if (ier1 != 0) {
 	*ier = 20;
-	xerfft_("RFFT2F", &c_n5, (ftnlen)6);
+	//xerfft_("RFFT2F", &c_n5, (ftnlen)6);
 	goto L100;
     }
 
     if (ier1 != 0) {
 	*ier = 20;
-	xerfft_("RFFT2F", &c_n5, (ftnlen)6);
+	//xerfft_("RFFT2F", &c_n5, (ftnlen)6);
 	goto L100;
     }
 
@@ -13319,7 +13319,7 @@ L100:
 
     if (*lensav < lwsav + mwsav + mmsav) {
 	*ier = 2;
-	xerfft_("RFFT2F", &c__6, (ftnlen)6);
+	//xerfft_("RFFT2F", &c__6, (ftnlen)6);
 	goto L100;
     }
 
@@ -13327,7 +13327,7 @@ L100:
 
     if (*lenwrk < (*l + 1) * *m) {
 	*ier = 3;
-	xerfft_("RFFT2F", &c__8, (ftnlen)6);
+	//xerfft_("RFFT2F", &c__8, (ftnlen)6);
 	goto L100;
     }
 
@@ -13335,7 +13335,7 @@ L100:
 
     if (*ldim < *l) {
 	*ier = 5;
-	xerfft_("RFFT2F", &c_n6, (ftnlen)6);
+	//xerfft_("RFFT2F", &c_n6, (ftnlen)6);
 	goto L100;
     }
 
@@ -13348,7 +13348,7 @@ L100:
 
     if (ier1 != 0) {
 	*ier = 20;
-	xerfft_("RFFT2F", &c_n5, (ftnlen)6);
+	//xerfft_("RFFT2F", &c_n5, (ftnlen)6);
 	goto L100;
     }
 
@@ -13406,7 +13406,7 @@ L100:
 		mwsav, &r__[r_offset], &i__3, &ier1);
 	if (ier1 != 0) {
 	    *ier = 20;
-	    xerfft_("RFFT2F", &c_n5, (ftnlen)6);
+	    //xerfft_("RFFT2F", &c_n5, (ftnlen)6);
 	    goto L100;
 	}
 	w2r_(ldim, &ldw, l, m, &r__[r_offset], &work[1]);
@@ -13433,7 +13433,7 @@ L100:
 
     if (ier1 != 0) {
 	*ier = 20;
-	xerfft_("RFFT2F", &c_n5, (ftnlen)6);
+	//xerfft_("RFFT2F", &c_n5, (ftnlen)6);
 	goto L100;
     }
 
@@ -13477,27 +13477,27 @@ L100:
     mmsav = *m + (int) (log((fft_real_t) (*m)) / log(2.0)) + 4;
     if (*lensav < lwsav + mwsav + mmsav) {
 	*ier = 2;
-	xerfft_("RFFT2I", &c__4, (ftnlen)6);
+	//xerfft_("RFFT2I", &c__4, (ftnlen)6);
 	goto L100;
     }
 
     rfftmi_(l, &wsave[1], &lwsav, &ier1);
     if (ier1 != 0) {
 	*ier = 20;
-	xerfft_("RFFT2I", &c_n5, (ftnlen)6);
+	//xerfft_("RFFT2I", &c_n5, (ftnlen)6);
 	goto L100;
     }
     cfftmi_(m, &wsave[lwsav + 1], &mwsav, &ier1);
     if (ier1 != 0) {
 	*ier = 20;
-	xerfft_("RFFT2I", &c_n5, (ftnlen)6);
+	//xerfft_("RFFT2I", &c_n5, (ftnlen)6);
 	goto L100;
     }
 
     rfftmi_(m, &wsave[lwsav + mwsav + 1], &mmsav, &ier1);
     if (ier1 != 0) {
 	*ier = 20;
-	xerfft_("RFFT2I", &c_n5, (ftnlen)6);
+	//xerfft_("RFFT2I", &c_n5, (ftnlen)6);
 	goto L100;
     }
 
@@ -14003,16 +14003,16 @@ L107:
 
     if (*lenr < (*lot - 1) * *jump + *inc * (*n - 1) + 1) {
 	*ier = 1;
-	xerfft_("RFFTMB ", &c__6, (ftnlen)7);
+	//xerfft_("RFFTMB ", &c__6, (ftnlen)7);
     } else if (*lensav < *n + (int) (log((fft_real_t) (*n)) / log(2.0)) + 4) {
 	*ier = 2;
-	xerfft_("RFFTMB ", &c__8, (ftnlen)7);
+	//xerfft_("RFFTMB ", &c__8, (ftnlen)7);
     } else if (*lenwrk < *lot * *n) {
 	*ier = 3;
-	xerfft_("RFFTMB ", &c__10, (ftnlen)7);
+	//xerfft_("RFFTMB ", &c__10, (ftnlen)7);
     } else if (! xercon_(inc, jump, n, lot)) {
 	*ier = 4;
-	xerfft_("RFFTMB ", &c_n1, (ftnlen)7);
+	//xerfft_("RFFTMB ", &c_n1, (ftnlen)7);
     }
 
     if (*n == 1) {
@@ -14054,16 +14054,16 @@ L107:
 
     if (*lenr < (*lot - 1) * *jump + *inc * (*n - 1) + 1) {
 	*ier = 1;
-	xerfft_("RFFTMF ", &c__6, (ftnlen)7);
+	//xerfft_("RFFTMF ", &c__6, (ftnlen)7);
     } else if (*lensav < *n + (int) (log((fft_real_t) (*n)) / log(2.0)) + 4) {
 	*ier = 2;
-	xerfft_("RFFTMF ", &c__8, (ftnlen)7);
+	//xerfft_("RFFTMF ", &c__8, (ftnlen)7);
     } else if (*lenwrk < *lot * *n) {
 	*ier = 3;
-	xerfft_("RFFTMF ", &c__10, (ftnlen)7);
+	//xerfft_("RFFTMF ", &c__10, (ftnlen)7);
     } else if (! xercon_(inc, jump, n, lot)) {
 	*ier = 4;
-	xerfft_("RFFTMF ", &c_n1, (ftnlen)7);
+	//xerfft_("RFFTMF ", &c_n1, (ftnlen)7);
     }
 
     if (*n == 1) {
@@ -14100,7 +14100,7 @@ L107:
 
     if (*lensav < *n + (int) (log((fft_real_t) (*n)) / log(2.0)) + 4) {
 	*ier = 2;
-	xerfft_("RFFTMI ", &c__3, (ftnlen)7);
+	//xerfft_("RFFTMI ", &c__3, (ftnlen)7);
     }
 
     if (*n == 1) {
@@ -14148,14 +14148,14 @@ L107:
 
     if (*lenx < *inc * (*n - 1) + 1) {
 	*ier = 1;
-	xerfft_("SINQ1B", &c__6, (ftnlen)6);
+	//xerfft_("SINQ1B", &c__6, (ftnlen)6);
     } else if (*lensav < (*n << 1) + (int) (log((fft_real_t) (*n)) / log(2.0))
 	    + 4) {
 	*ier = 2;
-	xerfft_("SINQ1B", &c__8, (ftnlen)6);
+	//xerfft_("SINQ1B", &c__8, (ftnlen)6);
     } else if (*lenwrk < *n) {
 	*ier = 3;
-	xerfft_("SINQ1B", &c__10, (ftnlen)6);
+	//xerfft_("SINQ1B", &c__10, (ftnlen)6);
     }
 
     if (*n > 1) {
@@ -14174,7 +14174,7 @@ L101:
 	    ier1);
     if (ier1 != 0) {
 	*ier = 20;
-	xerfft_("SINQ1B", &c_n5, (ftnlen)6);
+	//xerfft_("SINQ1B", &c_n5, (ftnlen)6);
 	goto L300;
     }
     i__1 = ns2;
@@ -14226,16 +14226,16 @@ L300:
 
     if (*lenx < *inc * (*n - 1) + 1) {
 	*ier = 1;
-	xerfft_("SINQ1F", &c__6, (ftnlen)6);
+	//xerfft_("SINQ1F", &c__6, (ftnlen)6);
 	goto L300;
     } else if (*lensav < (*n << 1) + (int) (log((fft_real_t) (*n)) / log(2.0))
 	    + 4) {
 	*ier = 2;
-	xerfft_("SINQ1F", &c__8, (ftnlen)6);
+	//xerfft_("SINQ1F", &c__8, (ftnlen)6);
 	goto L300;
     } else if (*lenwrk < *n) {
 	*ier = 3;
-	xerfft_("SINQ1F", &c__10, (ftnlen)6);
+	//xerfft_("SINQ1F", &c__10, (ftnlen)6);
 	goto L300;
     }
 
@@ -14255,7 +14255,7 @@ L300:
 	    ier1);
     if (ier1 != 0) {
 	*ier = 20;
-	xerfft_("SINQ1F", &c_n5, (ftnlen)6);
+	//xerfft_("SINQ1F", &c_n5, (ftnlen)6);
 	goto L300;
     }
     i__1 = *n;
@@ -14294,14 +14294,14 @@ L300:
 
     if (*lensav < (*n << 1) + (int) (log((fft_real_t) (*n)) / log(2.0)) + 4) {
 	*ier = 2;
-	xerfft_("SINQ1I", &c__3, (ftnlen)6);
+	//xerfft_("SINQ1I", &c__3, (ftnlen)6);
 	goto L300;
     }
 
     cosq1i_(n, &wsave[1], lensav, &ier1);
     if (ier1 != 0) {
 	*ier = 20;
-	xerfft_("SINQ1I", &c_n5, (ftnlen)6);
+	//xerfft_("SINQ1I", &c_n5, (ftnlen)6);
     }
 L300:
     return 0;
@@ -14346,17 +14346,17 @@ L300:
 
     if (*lenx < (*lot - 1) * *jump + *inc * (*n - 1) + 1) {
 	*ier = 1;
-	xerfft_("SINQMB", &c__6, (ftnlen)6);
+	//xerfft_("SINQMB", &c__6, (ftnlen)6);
     } else if (*lensav < (*n << 1) + (int) (log((fft_real_t) (*n)) / log(2.0))
 	    + 4) {
 	*ier = 2;
-	xerfft_("SINQMB", &c__8, (ftnlen)6);
+	//xerfft_("SINQMB", &c__8, (ftnlen)6);
     } else if (*lenwrk < *lot * *n) {
 	*ier = 3;
-	xerfft_("SINQMB", &c__10, (ftnlen)6);
+	//xerfft_("SINQMB", &c__10, (ftnlen)6);
     } else if (! xercon_(inc, jump, n, lot)) {
 	*ier = 4;
-	xerfft_("SINQMB", &c_n1, (ftnlen)6);
+	//xerfft_("SINQMB", &c_n1, (ftnlen)6);
     }
 
     lj = (*lot - 1) * *jump + 1;
@@ -14386,7 +14386,7 @@ L101:
 	    , lenwrk, &ier1);
     if (ier1 != 0) {
 	*ier = 20;
-	xerfft_("SINQMB", &c_n5, (ftnlen)6);
+	//xerfft_("SINQMB", &c_n5, (ftnlen)6);
 	goto L300;
     }
     i__2 = ns2;
@@ -14445,20 +14445,20 @@ L300:
 
     if (*lenx < (*lot - 1) * *jump + *inc * (*n - 1) + 1) {
 	*ier = 1;
-	xerfft_("SINQMF", &c__6, (ftnlen)6);
+	//xerfft_("SINQMF", &c__6, (ftnlen)6);
 	goto L300;
     } else if (*lensav < (*n << 1) + (int) (log((fft_real_t) (*n)) / log(2.0))
 	    + 4) {
 	*ier = 2;
-	xerfft_("SINQMF", &c__8, (ftnlen)6);
+	//xerfft_("SINQMF", &c__8, (ftnlen)6);
 	goto L300;
     } else if (*lenwrk < *lot * *n) {
 	*ier = 3;
-	xerfft_("SINQMF", &c__10, (ftnlen)6);
+	//xerfft_("SINQMF", &c__10, (ftnlen)6);
 	goto L300;
     } else if (! xercon_(inc, jump, n, lot)) {
 	*ier = 4;
-	xerfft_("SINQMF", &c_n1, (ftnlen)6);
+	//xerfft_("SINQMF", &c_n1, (ftnlen)6);
 	goto L300;
     }
 
@@ -14484,7 +14484,7 @@ L300:
 	    , lenwrk, &ier1);
     if (ier1 != 0) {
 	*ier = 20;
-	xerfft_("SINQMF", &c_n5, (ftnlen)6);
+	//xerfft_("SINQMF", &c_n5, (ftnlen)6);
 	goto L300;
     }
     i__1 = *n;
@@ -14528,14 +14528,14 @@ L300:
 
     if (*lensav < (*n << 1) + (int) (log((fft_real_t) (*n)) / log(2.0)) + 4) {
 	*ier = 2;
-	xerfft_("SINQMI", &c__3, (ftnlen)6);
+	//xerfft_("SINQMI", &c__3, (ftnlen)6);
 	goto L300;
     }
 
     cosqmi_(n, &wsave[1], lensav, &ier1);
     if (ier1 != 0) {
 	*ier = 20;
-	xerfft_("SINQMI", &c_n5, (ftnlen)6);
+	//xerfft_("SINQMI", &c_n5, (ftnlen)6);
     }
 L300:
     return 0;
@@ -14576,23 +14576,23 @@ L300:
 
     if (*lenx < *inc * (*n - 1) + 1) {
 	*ier = 1;
-	xerfft_("SINT1B", &c__6, (ftnlen)6);
+	//xerfft_("SINT1B", &c__6, (ftnlen)6);
 	goto L100;
     } else if (*lensav < *n / 2 + *n + (int) (log((fft_real_t) (*n)) / log(2.0))
 	     + 4) {
 	*ier = 2;
-	xerfft_("SINT1B", &c__8, (ftnlen)6);
+	//xerfft_("SINT1B", &c__8, (ftnlen)6);
 	goto L100;
     } else if (*lenwrk < (*n << 1) + 2) {
 	*ier = 3;
-	xerfft_("SINT1B", &c__10, (ftnlen)6);
+	//xerfft_("SINT1B", &c__10, (ftnlen)6);
 	goto L100;
     }
 
     sintb1_(n, inc, &x[x_offset], &wsave[1], &work[1], &work[*n + 2], &ier1);
     if (ier1 != 0) {
 	*ier = 20;
-	xerfft_("SINT1B", &c_n5, (ftnlen)6);
+	//xerfft_("SINT1B", &c_n5, (ftnlen)6);
     }
 
 L100:
@@ -14633,23 +14633,23 @@ L100:
     *ier = 0;
     if (*lenx < *inc * (*n - 1) + 1) {
 	*ier = 1;
-	xerfft_("SINT1F", &c__6, (ftnlen)6);
+	//xerfft_("SINT1F", &c__6, (ftnlen)6);
 	goto L100;
     } else if (*lensav < *n / 2 + *n + (int) (log((fft_real_t) (*n)) / log(2.0))
 	     + 4) {
 	*ier = 2;
-	xerfft_("SINT1F", &c__8, (ftnlen)6);
+	//xerfft_("SINT1F", &c__8, (ftnlen)6);
 	goto L100;
     } else if (*lenwrk < (*n << 1) + 2) {
 	*ier = 3;
-	xerfft_("SINT1F", &c__10, (ftnlen)6);
+	//xerfft_("SINT1F", &c__10, (ftnlen)6);
 	goto L100;
     }
 
     sintf1_(n, inc, &x[x_offset], &wsave[1], &work[1], &work[*n + 2], &ier1);
     if (ier1 != 0) {
 	*ier = 20;
-	xerfft_("SINT1F", &c_n5, (ftnlen)6);
+	//xerfft_("SINT1F", &c_n5, (ftnlen)6);
     }
 L100:
     return 0;
@@ -14686,7 +14686,7 @@ L100:
 
     if (*lensav < *n / 2 + *n + (int) (log((fft_real_t) (*n)) / log(2.0)) + 4) {
 	*ier = 2;
-	xerfft_("SINT1I", &c__3, (ftnlen)6);
+	//xerfft_("SINT1I", &c__3, (ftnlen)6);
 	goto L300;
     }
 
@@ -14706,7 +14706,7 @@ L100:
     rfft1i_(&np1, &wsave[ns2 + 1], &lnsv, &ier1);
     if (ier1 != 0) {
 	*ier = 20;
-	xerfft_("SINT1I", &c_n5, (ftnlen)6);
+	//xerfft_("SINT1I", &c_n5, (ftnlen)6);
     }
 
 L300:
@@ -14788,7 +14788,7 @@ L124:
 	    ier1);
     if (ier1 != 0) {
 	*ier = 20;
-	xerfft_("SINTB1", &c_n5, (ftnlen)6);
+	//xerfft_("SINTB1", &c_n5, (ftnlen)6);
 	goto L200;
     }
 
@@ -14892,7 +14892,7 @@ L124:
 	    ier1);
     if (ier1 != 0) {
 	*ier = 20;
-	xerfft_("SINTF1", &c_n5, (ftnlen)6);
+	//xerfft_("SINTF1", &c_n5, (ftnlen)6);
 	goto L200;
     }
 
@@ -14957,20 +14957,20 @@ L200:
 
     if (*lenx < (*lot - 1) * *jump + *inc * (*n - 1) + 1) {
 	*ier = 1;
-	xerfft_("SINTMB", &c__6, (ftnlen)6);
+	//xerfft_("SINTMB", &c__6, (ftnlen)6);
 	goto L100;
     } else if (*lensav < *n / 2 + *n + (int) (log((fft_real_t) (*n)) / log(2.0))
 	     + 4) {
 	*ier = 2;
-	xerfft_("SINTMB", &c__8, (ftnlen)6);
+	//xerfft_("SINTMB", &c__8, (ftnlen)6);
 	goto L100;
     } else if (*lenwrk < *lot * ((*n << 1) + 4)) {
 	*ier = 3;
-	xerfft_("SINTMB", &c__10, (ftnlen)6);
+	//xerfft_("SINTMB", &c__10, (ftnlen)6);
 	goto L100;
     } else if (! xercon_(inc, jump, n, lot)) {
 	*ier = 4;
-	xerfft_("SINTMB", &c_n1, (ftnlen)6);
+	//xerfft_("SINTMB", &c_n1, (ftnlen)6);
 	goto L100;
     }
 
@@ -14980,7 +14980,7 @@ L200:
 	     &work[iw1], &work[iw2], &ier1);
     if (ier1 != 0) {
 	*ier = 20;
-	xerfft_("SINTMB", &c_n5, (ftnlen)6);
+	//xerfft_("SINTMB", &c_n5, (ftnlen)6);
     }
 
 L100:
@@ -15025,20 +15025,20 @@ L100:
 
     if (*lenx < (*lot - 1) * *jump + *inc * (*n - 1) + 1) {
 	*ier = 1;
-	xerfft_("SINTMF", &c__6, (ftnlen)6);
+	//xerfft_("SINTMF", &c__6, (ftnlen)6);
 	goto L100;
     } else if (*lensav < *n / 2 + *n + (int) (log((fft_real_t) (*n)) / log(2.0))
 	     + 4) {
 	*ier = 2;
-	xerfft_("SINTMF", &c__8, (ftnlen)6);
+	//xerfft_("SINTMF", &c__8, (ftnlen)6);
 	goto L100;
     } else if (*lenwrk < *lot * ((*n << 1) + 4)) {
 	*ier = 3;
-	xerfft_("SINTMF", &c__10, (ftnlen)6);
+	//xerfft_("SINTMF", &c__10, (ftnlen)6);
 	goto L100;
     } else if (! xercon_(inc, jump, n, lot)) {
 	*ier = 4;
-	xerfft_("SINTMF", &c_n1, (ftnlen)6);
+	//xerfft_("SINTMF", &c_n1, (ftnlen)6);
 	goto L100;
     }
 
@@ -15048,7 +15048,7 @@ L100:
 	     &work[iw1], &work[iw2], &ier1);
     if (ier1 != 0) {
 	*ier = 20;
-	xerfft_("SINTMF", &c_n5, (ftnlen)6);
+	//xerfft_("SINTMF", &c_n5, (ftnlen)6);
     }
 L100:
     return 0;
@@ -15085,7 +15085,7 @@ L100:
 
     if (*lensav < *n / 2 + *n + (int) (log((fft_real_t) (*n)) / log(2.0)) + 4) {
 	*ier = 2;
-	xerfft_("SINTMI", &c__3, (ftnlen)6);
+	//xerfft_("SINTMI", &c__3, (ftnlen)6);
 	goto L300;
     }
 
@@ -15105,7 +15105,7 @@ L100:
     rfftmi_(&np1, &wsave[ns2 + 1], &lnsv, &ier1);
     if (ier1 != 0) {
 	*ier = 20;
-	xerfft_("SINTMI", &c_n5, (ftnlen)6);
+	//xerfft_("SINTMI", &c_n5, (ftnlen)6);
     }
 
 L300:

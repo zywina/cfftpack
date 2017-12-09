@@ -1,4 +1,6 @@
 
+
+
 include_directories (..)
 
 set(TEST_SRC
@@ -23,3 +25,6 @@ target_link_libraries (testall cfftpack m)
 
 add_executable(ftest ftest.c)
 target_link_libraries (ftest cfftpack m)
+
+add_executable(vg_mc vg_mc.cpp)
+target_link_libraries (vg_mc cfftpack m)
