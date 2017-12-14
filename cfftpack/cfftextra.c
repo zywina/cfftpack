@@ -30,8 +30,7 @@ int fft_next_fast_even_size(int n){
   return fft_next_fast_size_internal(n,2);
 }
 
-int fftshift(void *vdata, int n){
-  if (!vdata || n<0) return -1;
+int cfftpack_even_fftshift(void *vdata, int n){
   fft_complex_t tmp, *data=(fft_complex_t*)vdata;
   int i,j,n2 = n/2;
   for (i=0; i<n2; i++){
@@ -43,16 +42,39 @@ int fftshift(void *vdata, int n){
   return 0;
 }
 
-int ifftshift(void *vdata, int n){
+int fftshift(void *vdata, int n){
   if (!vdata || n<0) return -1;
-  fft_complex_t tmp, *data=(fft_complex_t*)vdata;
+  if (n==1) return 0;
+  if (n%2==0) return cfftpack_even_fftshift(vdata,n);
+
+  fft_complex_t tmp, store, *data=(fft_complex_t*)vdata;
   int i,j,n2 = n/2;
+  store = data[n2];
   for (i=0; i<n2; i++){
     j = n2+i;
     tmp = data[i];
-    data[i]=data[j];
+    data[i]=data[j+1];
     data[j]=tmp;
   }
+  data[n-1] = store;
+  return 0;
+}
+
+int ifftshift(void *vdata, int n){
+  if (!vdata || n<0) return -1;
+  if (n==1) return 0;
+  if (n%2==0) return cfftpack_even_fftshift(vdata,n);
+
+  fft_complex_t tmp, store, *data=(fft_complex_t*)vdata;
+  int i,j,n2 = n/2;
+  store = data[n-1];
+  for (i=n2-1; i>=0; i--){
+    j = n2+i;
+    tmp = data[i];
+    data[i]=data[j];
+    data[j+1]=tmp;
+  }
+  data[n2] = store;
   return 0;
 }
 
@@ -230,38 +252,52 @@ int dst4_inverse(fft_t *f, fft_real_t *data){
 }
 
 
-/*
-Create an N-dimensional DCT transform object. This uses the method
-of repeatedly applying 1D transforms across each dimension. There
-are faster algorithms for higher dimensions these days.
-*/
-fft_t *ndct_create(int *dims,int ndim){
-  if (ndim<=0 || !dims) return NULL;
+fft_t *dct_2d_create(int M, int N){
+  if (M<=0 || N<=0) return NULL;
   int i,n=0,lensav=0;
-  for (i=0; i<ndim; i++){
-    if (dims[i]<=0) return NULL;
-    if (dims[i]>n){
-      n = dims[i];
-      lensav = (n << 1) + (int) (log(n) / log(2.0)) + 4;
-    }
-  }
+
+  n = M>N ? M : N;
+  lensav = (n << 1) + (int) (log(n) / log(2.0)) + 4;
 
   fft_t *f = (fft_t*)malloc(sizeof(fft_t));
   if (!f) return NULL;
   memset(f,0,sizeof(fft_t));
-  //f->sub = dct_create(size/2);
-  f->n = ndim;
-  f->algo = ALGO_NDCT;
+  f->algo = ALGO_DCT_2D;
   f->inc=1;
-  // (*lensav < (*n << 1) + (int) (log((fft_real_t) (*n)) / log(2.0)) + 4)
+  f->n = N;
+  f->m = M;
+  f->save = calloc(lensav, sizeof(fft_real_t));
+  f->lensav = lensav;
 
-
+  return f;
 }
 
-int ndct_forward(fft_t *f, fft_real_t *data){
+int dct_2d_forward(fft_t *f, fft_real_t *data){
+  if (!f || !data) return -1;
+  if (f->algo != ALGO_DCT_2D) return -2;
+
+  int M = f->m, N = f->n;
+  int lot,inc,jump,lenx,ier,ret;
+
+  lot = M;
+  jump = N;
+  inc = 1;
+  lenx = M*N;
+  ier=0;
+  ret = cosqmb_(&lot,&jump,&M,&inc,data,&lenx,f->save,&f->lensav,f->work,&f->lenwork,&ier);
+  if (ret) return ret;
+
+  lot = N;
+  jump = 1;
+  inc=N;
+  lenx = N*N;
+  ier=0;
+  ret = cosqmb_(&lot,&jump,&N,&inc,data,&lenx,f->save,&f->lensav,f->work,&f->lenwork,&ier);
+  if (ret) return ret;
+
   return 0;
 }
 
-int ndct_inverse(fft_t *f, fft_real_t *data){
+int dct_2d_inverse(fft_t *f, fft_real_t *data){
   return 0;
 }

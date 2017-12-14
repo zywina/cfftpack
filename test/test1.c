@@ -186,11 +186,37 @@ void test_size(){
   }
 }
 
+#define NS 15
+void testshift(){
+    fft_real_t _Complex a[NS];
+    int i,n;
+    for (i=0; i<NS; i++)
+      a[i] = i+1;
+
+    n = NS;
+    for (i=0; i<NS; i++){
+      printf("%.0f, ",creal(a[i]));
+    }
+    printf("\n\n");
+    fftshift(a, n);
+    for (i=0; i<NS; i++){
+      printf("%.0f, ",creal(a[i]));
+    }
+    printf("\n\n");
+    ifftshift(a, n);
+    for (i=0; i<NS; i++){
+      printf("%.0f, ",creal(a[i]));
+    }
+    printf("\n\n");
+
+}
+
 int main(){
   rand_seed();
   //test1();
-  test2();
+  //test2();
   //test3();
   //test_size();
+  testshift();
   return 0;
 }

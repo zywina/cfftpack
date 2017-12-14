@@ -40,9 +40,21 @@ int fft_next_fast_even_size(int n);
 @param data array expected to be binary compatable with "fft_real_t _Complex"
   or std::complex<fft_real_t>
 @param n array length
+
+Shift specturm after an fft call to center it. Same as #ifftshift for even arrays,
+differs slightly for odd length.
 */
 int fftshift(void *data, int n);
 
+/**
+@brief shift zero from center to index 0
+@param data array expected to be binary compatable with "fft_real_t _Complex"
+  or std::complex<fft_real_t>
+@param n array length
+
+Shift centered frequency before an ifft call. Same as #fftshift for even arrays,
+differs slightly for odd length.
+*/
 int ifftshift(void *data, int n);
 
 /**
@@ -100,13 +112,12 @@ int dst4_inverse(fft_t *f, fft_real_t *data);
 
 
 /*
-Create and N-dimensional DCT transform object. This uses the method
-of repeatedly applying 1D transforms across each dimension. There
-are faster algorithms for higher dimensions these days.
+Create a 2-dimensional DCT transform object. This uses the method
+of repeatedly applying 1D transforms across each dimension.
 */
-fft_t *ndct_create(int *dims,int ndim);
-int ndct_forward(fft_t *f, fft_real_t *data);
-int ndct_inverse(fft_t *f, fft_real_t *data);
+fft_t *dct_2d_create(int M,int N);
+int dct_2d_forward(fft_t *f, fft_real_t *data);
+int dct_2d_inverse(fft_t *f, fft_real_t *data);
 
 
 #ifdef __cplusplus

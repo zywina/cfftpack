@@ -183,7 +183,7 @@ enum{
   ALGO_DST1,
   ALGO_DST,
   ALGO_DST4,
-  ALGO_NDCT
+  ALGO_DCT_2D
 };
 
 struct FFT_{
