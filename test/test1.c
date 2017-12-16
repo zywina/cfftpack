@@ -211,12 +211,99 @@ void testshift(){
 
 }
 
+
+void test_dct_2d(){
+  const int M = 16;
+  const int N = 10;
+  const int LEN = M*N;
+  fft_real_t data1[LEN],data2[LEN],data3[LEN];
+  int i,j;
+  for (j=0; j<N; j++){
+    for (i=0; i<M; i++){
+      data1[i+j*M] = i+j+1;
+      data2[i+j*M] = data1[i+j*M];
+      data3[i+j*M] = data1[i+j*M];
+    }
+  }
+  fft_t *f = dct_2d_create(M,N);
+
+  int ret = dct_2d_inverse(f, data2);
+  printf("dct_2d_forward returns %d\n",ret);
+  naive_dct2_2d(M,N,data1,data3, false);
+  for (j=0; j<N; j++){
+    for (i=0; i<M; i++){
+      printf("%8.2f", data2[i+j*M]);
+    }
+    printf("\n");
+  }
+  printf("\n");
+  for (j=0; j<N; j++){
+    for (i=0; i<M; i++){
+      printf("%8.2f", data3[i+j*M]);
+    }
+    printf("\n");
+  }
+  printf("\n");
+
+
+  fft_free(f);
+}
+
+void time_dcct_2d(){
+  clock_t start,end;
+  const int M = 128;
+  const int N = 128;
+  const int LEN = M*N;
+  fft_real_t data1[LEN],data2[LEN],data3[LEN];
+  int i,j;
+  for (j=0; j<N; j++){
+    for (i=0; i<M; i++){
+      data1[i+j*M] = i+j+1;
+      data2[i+j*M] = data1[i+j*M];
+      data3[i+j*M] = data1[i+j*M];
+    }
+  }
+  const int SAMP = 1000;
+
+  fft_t *f = dct_2d_create(M,N);
+  start=clock();
+  for (i=0; i<SAMP; i++){
+    memcpy(data2,data1,LEN*sizeof(fft_real_t));
+    dct_2d_inverse(f, data2);
+  }
+  end=clock();
+  fft_free(f);
+
+  double dt1 = (end-start)/(double)CLOCKS_PER_SEC;
+  printf("\n\n");
+  printf("time fftpack: %f\n",dt1);
+
+  fft_t *Fm = dct_create(M);
+  fft_t *Fn = dct_create(N);
+  start=clock();
+  for (i=0; i<SAMP; i++){
+    naive_real_2d(M,N,Fm,Fn,dct_inverse,data1,data3, false);
+    //memcpy(data2,data1,LEN*sizeof(fft_real_t));
+    //fft_t *f = dct_2d_create(M,N);
+    //dct_2d_inverse(f, data2);
+    //fft_free(f);
+  }
+  end=clock();
+  fft_free(Fm);
+  fft_free(Fn);
+  double dt2 = (end-start)/(double)CLOCKS_PER_SEC;
+  printf("time naive: %f\n",dt2);
+  printf("t1 / t2 %f, %f%%\n",dt1/dt2, (dt1/dt2-1)*100);
+}
+
 int main(){
   rand_seed();
   //test1();
   //test2();
   //test3();
   //test_size();
-  testshift();
+  //testshift();
+  test_dct_2d();
+  time_dcct_2d();
   return 0;
 }

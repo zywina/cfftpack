@@ -221,3 +221,85 @@ void naive_dst4(int N, const fft_real_t *x, fft_real_t *y, int mode){
     y[k]*=m;
   }
 }
+
+void naive_dct2_2d(int m,int n,const fft_real_t *x, fft_real_t *y, bool ortho){
+  fft_t *f1,*f2;
+  f1 = dct_create(m);
+  f2 = dct_create(n);
+  if (f1==NULL || f2==NULL){
+    printf("bad input to naive_dct2_2d");
+    exit(0);
+  }
+  fft_ortho(f1, ortho);
+  fft_ortho(f2, ortho);
+  fft_stride(f2, m);
+  int i,j,k;
+
+  memcpy(y,x,sizeof(fft_real_t)*m*n);
+  for (i=0; i<n; i++){
+    dct_inverse(f1, &y[i*m]);
+  }
+  for (i=0; i<m; i++){
+    int ret = 0;
+    ret=dct_inverse(f2, &y[i]);
+    if (ret){
+      printf("ret = %d\n",ret);
+      break;
+    }
+  }
+
+  fft_free(f1);
+  fft_free(f2);
+}
+
+void naive_dct3_2d(int m,int n,const fft_real_t *x, fft_real_t *y, bool ortho){
+  fft_t *fm,*fn;
+  fm = dct_create(m);
+  fn = dct_create(n);
+  naive_real_2d(m,n,fm,fn, dct_forward, x, y, ortho);
+  fft_free(fm);
+  fft_free(fn);
+}
+
+void naive_real_2d(int m,int n,
+  fft_t *fm, fft_t *fn, int (*tranform_func)(fft_t *, fft_real_t *),
+  const fft_real_t *x, fft_real_t *y, bool ortho)
+{
+  fft_stride(fn, m);
+  int i,j,k;
+
+  memcpy(y,x,sizeof(fft_real_t)*m*n);
+  for (i=0; i<n; i++){
+    tranform_func(fm, &y[i*m]);
+  }
+  for (i=0; i<m; i++){
+    int ret = 0;
+    ret=tranform_func(fn, &y[i]);
+    if (ret){
+      printf("ret = %d\n",ret);
+      break;
+    }
+  }
+}
+
+void naive_dct1_2d(int m,int n,const fft_real_t *x, fft_real_t *y, int mode){
+  fft_t *fm,*fn;
+  fm = dct1_create(m);
+  fn = dct1_create(n);
+  naive_real_2d(m,n,fm,fn,
+    mode > 0 ? dct1_forward : dct1_inverse,
+    x, y, false);
+  fft_free(fm);
+  fft_free(fn);
+}
+
+void naive_dct4_2d(int m,int n,const fft_real_t *x, fft_real_t *y, int mode){
+  fft_t *fm,*fn;
+  fm = dct4_create(m);
+  fn = dct4_create(n);
+  naive_real_2d(m,n,fm,fn,
+    mode > 0 ? dct4_forward : dct4_inverse,
+    x, y, false);
+  fft_free(fm);
+  fft_free(fn);
+}

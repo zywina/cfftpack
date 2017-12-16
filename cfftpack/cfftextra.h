@@ -99,24 +99,34 @@ fft_t *dst4_create(int size);
 /**
 @brief inplace forward DCT-IV transform
 
-If orthonormal scaling is enabled this function is identical to #dct4_inverse
+If orthonormal scaling is enabled this function is identical to #dst4_inverse
 */
 int dst4_forward(fft_t *f, fft_real_t *data);
 
 /**
 @brief inplace inverse DCT-IV transform
 
-If orthonormal scaling is enabled this function is identical to #dct4_forward
+If orthonormal scaling is enabled this function is identical to #dst4_forward
 */
 int dst4_inverse(fft_t *f, fft_real_t *data);
 
 
-/*
+/**
 Create a 2-dimensional DCT transform object. This uses the method
-of repeatedly applying 1D transforms across each dimension.
+of repeatedly applying 1D transforms across each dimension but is ~25%
+faster than hand coding that.
+
+Assumes that the input is a M*N length array that is indexed like:
+for (i=0; i<M; i++)
+  for (j=0; j<N; j++)
+    data[i + j*M] = 1;
+
+Orthonormalization and stride not supported.
 */
 fft_t *dct_2d_create(int M,int N);
+/// 2D DCT-III transform
 int dct_2d_forward(fft_t *f, fft_real_t *data);
+/// 2D DCT-II transform
 int dct_2d_inverse(fft_t *f, fft_real_t *data);
 
 

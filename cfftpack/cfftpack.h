@@ -11,7 +11,7 @@ Roy Zywina, (c) 2017, MIT licence (https://opensource.org/licenses/MIT)
 
 The purpose of this project is to provide a relatively thin wrapper for FFTPACK
 with a more familiar API for C/C++ programmers. The only feature addition is an
-option for orthonormal scaling on all algorithms. Additional algorithms not
+option for orthonormal scaling on most algorithms. Additional algorithms not
 featured in the fortran (DCT-IV, DST-IV, etc) are in the optional files
 cfftextra.h/c along with some utility functions.
 

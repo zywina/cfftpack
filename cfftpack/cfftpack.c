@@ -188,11 +188,11 @@ int dct_forward(fft_t *f, fft_real_t *data){
     data[0]*=m0;
     int i;
     for (i=1; i<f->n; i++)
-      data[i] *= m;
+      data[i*f->inc] *= m;
   }
 
-  int ier=0;
-  cosq1f_(&f->n, &f->inc, data, &f->n, f->save, &f->lensav, f->work, &f->lenwork, &ier);
+  int ier=0, len = f->n*f->inc;
+  cosq1f_(&f->n, &f->inc, data, &len, f->save, &f->lensav, f->work, &f->lenwork, &ier);
   if (ier)
     return ier;
   return 0;
@@ -204,15 +204,15 @@ int dct_inverse(fft_t *f, fft_real_t *data){
     return -1;
   if (f->algo != ALGO_DCT)
     return -2;
-  int ier=0, inc=1;
-  cosq1b_(&f->n, &f->inc, data, &f->n, f->save, &f->lensav, f->work, &f->lenwork, &ier);
+  int ier=0, len = f->n*f->inc;
+  cosq1b_(&f->n, &f->inc, data, &len, f->save, &f->lensav, f->work, &f->lenwork, &ier);
   if (f->ortho){
     double m0 = 1.0/sqrt(f->n);
     double m = sqrt(2.0/f->n);
     data[0]*=m0;
     int i;
     for (i=1; i<f->n; i++)
-      data[i] *= m;
+      data[i*f->inc] *= m;
   }
   if (ier)
     return ier;

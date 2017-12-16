@@ -2,6 +2,15 @@
 #include <string.h>
 #include "cfftextra.h"
 
+#ifndef min
+#define min(a,b) ((a)<(b)?(a):(b))
+#endif
+
+#ifndef max
+#define max(a,b) ((a)>(b)?(a):(b))
+#endif
+
+
 int fft_next_fast_size_internal(int n,int inc){
   if (n<=0) return -1;
   int m;
@@ -200,7 +209,7 @@ int dct4_forward(fft_t *f, fft_real_t *data){
     // for consistency I apply the scaling on the forward transform
     fft_real_t m = 2.0/f->n;
     int i;
-    for (i=0; i<f->n; i++)
+    for (i=0; i<f->n; i+=f->inc)
       data[i] *= m;
   }
   return 0;
@@ -229,7 +238,7 @@ int dst4_forward(fft_t *f, fft_real_t *data){
     // for consistency I apply the scaling on the forward transform
     fft_real_t m = 2.0/f->n;
     int i;
-    for (i=0; i<f->n; i++)
+    for (i=0; i<f->n; i+=f->inc)
       data[i] *= m;
   }
   return 0;
@@ -241,23 +250,26 @@ int dst4_inverse(fft_t *f, fft_real_t *data){
   int i,n2=f->n/2;
   fft_real_t tmp;
   for (i=0; i<n2; i++){
-    tmp = data[i];
-    data[i] = data[f->n-i-1];
-    data[f->n-i-1] = tmp;
+    tmp = data[i*f->inc];
+    data[i*f->inc] = data[(f->n-i-1)*f->inc];
+    data[(f->n-i-1)*f->inc] = tmp;
   }
   dct4_transform_internal(f,data);
   for (i=1; i<f->n; i+=2)
-    data[i] = - data[i];
+    data[i*f->inc] = - data[i*f->inc];
   return 0;
 }
 
 
 fft_t *dct_2d_create(int M, int N){
   if (M<=0 || N<=0) return NULL;
-  int i,n=0,lensav=0;
+  int i,n=0,lensav=0,lenwork;
 
   n = M>N ? M : N;
   lensav = (n << 1) + (int) (log(n) / log(2.0)) + 4;
+  lenwork = M*N;
+
+  lensav*=2;
 
   fft_t *f = (fft_t*)malloc(sizeof(fft_t));
   if (!f) return NULL;
@@ -268,6 +280,20 @@ fft_t *dct_2d_create(int M, int N){
   f->m = M;
   f->save = calloc(lensav, sizeof(fft_real_t));
   f->lensav = lensav;
+  f->work = calloc(lenwork, sizeof(fft_real_t));
+  f->lenwork = lenwork;
+
+  int ier=0, len = lensav/2;
+  cosqmi_(&M, f->save, &len, &ier);
+  if (ier){
+    fft_free(f);
+    return NULL;
+  }
+  cosqmi_(&N, &f->save[len], &len, &ier);
+  if (ier){
+    fft_free(f);
+    return NULL;
+  }
 
   return f;
 }
@@ -276,28 +302,55 @@ int dct_2d_forward(fft_t *f, fft_real_t *data){
   if (!f || !data) return -1;
   if (f->algo != ALGO_DCT_2D) return -2;
 
+  int lensav = f->lensav/2;
   int M = f->m, N = f->n;
   int lot,inc,jump,lenx,ier,ret;
 
-  lot = M;
-  jump = N;
+  lot = N;
+  jump = M;
   inc = 1;
   lenx = M*N;
   ier=0;
-  ret = cosqmb_(&lot,&jump,&M,&inc,data,&lenx,f->save,&f->lensav,f->work,&f->lenwork,&ier);
-  if (ret) return ret;
+  cosqmf_(&lot,&jump,&M,&inc,data,&lenx,f->save,&lensav,f->work,&f->lenwork,&ier);
+  if (ier) return ier;
 
-  lot = N;
+  lot = M;
   jump = 1;
   inc=N;
-  lenx = N*N;
+  lenx = M*N;
   ier=0;
-  ret = cosqmb_(&lot,&jump,&N,&inc,data,&lenx,f->save,&f->lensav,f->work,&f->lenwork,&ier);
-  if (ret) return ret;
+  cosqmf_(&lot,&jump,&N,&inc,data,&lenx,&f->save[lensav],&lensav,f->work,&f->lenwork,&ier);
+  if (ier) return ier;
 
   return 0;
 }
 
 int dct_2d_inverse(fft_t *f, fft_real_t *data){
+  if (!f || !data) return -1;
+  if (f->algo != ALGO_DCT_2D) return -2;
+
+  int lensav = f->lensav/2;
+  int M = f->m, N = f->n;
+  int lot,inc,jump,lenx,ier,ret;
+
+  lot = N;
+  jump = M;
+  inc = 1;
+  lenx = M*N;
+  ier=0;
+  cosqmb_(&lot,&jump,&M,&inc,data,&lenx,f->save,&lensav,f->work,&f->lenwork,&ier);
+  if (ier) return ier;
+
+  // (*lenx < (*lot - 1) * *jump + *inc * (*n - 1) + 1)
+
+  lot = M;
+  jump = 1;
+  inc= M;
+  lenx = M*N;
+  ier=0;
+  //printf("%d, %d\n",lenx, (lot-1)*jump+inc*())
+  cosqmb_(&lot,&jump,&N,&inc,data,&lenx,&f->save[lensav],&lensav,f->work,&f->lenwork,&ier);
+  if (ier) return ier;
+
   return 0;
 }
