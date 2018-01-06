@@ -12,7 +12,7 @@
 
 
 int fft_next_fast_size_internal(int n,int inc){
-  if (n<=0) return -1;
+  if (n<=0) return 1;
   int m;
   do{
     m=n;
@@ -34,7 +34,7 @@ int fft_next_fast_size(int n){
 }
 
 int fft_next_fast_even_size(int n){
-  if (n<=0) return -1;
+  if (n<=2) return 2;
   if (n%2) n++;
   return fft_next_fast_size_internal(n,2);
 }
@@ -135,8 +135,8 @@ int dct4_transform_internal(fft_t *f, fft_real_t *data){
   if (N==2){
     const fft_real_t FC2 = cos(0.5*0.5*M_PI/2);
     const fft_real_t FS2 = sin(0.5*0.5*M_PI/2);
-    temp = FC2 * x[0] + FS2 * x[1];
-    x[1] = FS2 * x[0] - FC2 * x[1];
+    temp = FC2 * x[0] + FS2 * x[inc];
+    x[inc] = FS2 * x[0] - FC2 * x[inc];
     x[0] = temp;
     return 0;
   }
@@ -263,7 +263,7 @@ int dst4_inverse(fft_t *f, fft_real_t *data){
 
 fft_t *dct_2d_create(int M, int N){
   if (M<=0 || N<=0) return NULL;
-  int i,n=0,lensav=0,lenwork;
+  int n=0,lensav=0,lenwork;
 
   n = M>N ? M : N;
   lensav = (n << 1) + (int) (log(n) / log(2.0)) + 4;
@@ -304,21 +304,21 @@ int dct_2d_forward(fft_t *f, fft_real_t *data){
 
   int lensav = f->lensav/2;
   int M = f->m, N = f->n;
-  int lot,inc,jump,lenx,ier,ret;
+  int lot,inc,jump,lenx,ier;
 
   lot = N;
   jump = M;
   inc = 1;
   lenx = M*N;
-  ier=0;
+  ier = 0;
   cosqmf_(&lot,&jump,&M,&inc,data,&lenx,f->save,&lensav,f->work,&f->lenwork,&ier);
   if (ier) return ier;
 
   lot = M;
   jump = 1;
-  inc=N;
+  inc = M;
   lenx = M*N;
-  ier=0;
+  ier = 0;
   cosqmf_(&lot,&jump,&N,&inc,data,&lenx,&f->save[lensav],&lensav,f->work,&f->lenwork,&ier);
   if (ier) return ier;
 
@@ -331,24 +331,21 @@ int dct_2d_inverse(fft_t *f, fft_real_t *data){
 
   int lensav = f->lensav/2;
   int M = f->m, N = f->n;
-  int lot,inc,jump,lenx,ier,ret;
+  int lot,inc,jump,lenx,ier;
 
   lot = N;
   jump = M;
   inc = 1;
   lenx = M*N;
-  ier=0;
+  ier = 0;
   cosqmb_(&lot,&jump,&M,&inc,data,&lenx,f->save,&lensav,f->work,&f->lenwork,&ier);
   if (ier) return ier;
 
-  // (*lenx < (*lot - 1) * *jump + *inc * (*n - 1) + 1)
-
   lot = M;
   jump = 1;
-  inc= M;
+  inc = M;
   lenx = M*N;
-  ier=0;
-  //printf("%d, %d\n",lenx, (lot-1)*jump+inc*())
+  ier = 0;
   cosqmb_(&lot,&jump,&N,&inc,data,&lenx,&f->save[lensav],&lensav,f->work,&f->lenwork,&ier);
   if (ier) return ier;
 

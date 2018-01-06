@@ -213,23 +213,27 @@ void testshift(){
 
 
 void test_dct_2d(){
-  const int M = 16;
-  const int N = 10;
+  const int M = 12;
+  const int N = 6;
   const int LEN = M*N;
   fft_real_t data1[LEN],data2[LEN],data3[LEN];
   int i,j;
   for (j=0; j<N; j++){
     for (i=0; i<M; i++){
       data1[i+j*M] = i+j+1;
+      //  (i+j)==0?M*N:0;
+      //data1[1]=M*N;
+      //data1[2]=0.5;
+      //data1[M+1] = -1.25;
       data2[i+j*M] = data1[i+j*M];
       data3[i+j*M] = data1[i+j*M];
     }
   }
   fft_t *f = dct_2d_create(M,N);
 
-  int ret = dct_2d_inverse(f, data2);
+  int ret = dct_2d_forward(f, data2);
   printf("dct_2d_forward returns %d\n",ret);
-  naive_dct2_2d(M,N,data1,data3, false);
+  naive_dct3_2d(M,N,data1,data3, false);
   for (j=0; j<N; j++){
     for (i=0; i<M; i++){
       printf("%8.2f", data2[i+j*M]);
@@ -254,7 +258,7 @@ void time_dcct_2d(){
   const int M = 128;
   const int N = 128;
   const int LEN = M*N;
-  fft_real_t data1[LEN],data2[LEN],data3[LEN];
+  static fft_real_t data1[LEN],data2[LEN],data3[LEN];
   int i,j;
   for (j=0; j<N; j++){
     for (i=0; i<M; i++){

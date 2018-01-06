@@ -98,10 +98,10 @@ double asian_option(bool isCall,double S,double K,double sigma,double t,double r
   return (sum/samples) * exp(-r*t);
 }
 
+#define NSIM 50
 // price a sample option a number of times and print out convergence stats
 void test_asian_option(bool random, int samples){
-  const int nsim = 50;
-  double value[nsim];
+  double value[NSIM];
   double S,K,sigma,r,t;
   bool isCall = false;
   S = 100.0; // stock price
@@ -112,16 +112,16 @@ void test_asian_option(bool random, int samples){
   int steps = 128;
   int i;
   double sum = 0;
-  for (i=0; i<nsim; i++){
+  for (i=0; i<NSIM; i++){
     value[i] = asian_option(isCall, S, K, sigma, t, r,
       random, steps, samples, i);
     sum += value[i];
   }
-  double sumsq=0, mean = sum/nsim;
-  for (i=0; i<nsim; i++){
+  double sumsq=0, mean = sum/NSIM;
+  for (i=0; i<NSIM; i++){
     sumsq += pow(value[i] - mean, 2);
   }
-  double stdev = sqrt(sumsq / (nsim-1.0));
+  double stdev = sqrt(sumsq / (NSIM-1.0));
   printf("%5s: mean %10.6f, stdev %10.6f\n",
     (random?"MC":"QMC"), mean, stdev);
 }

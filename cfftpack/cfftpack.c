@@ -468,10 +468,6 @@ int rfft_forward(fft_t *f, const fft_real_t *inp, void *outp){
   if (f->n%2==0){
     data[f->n+1] = 0;
   }
-  //data[0]=data[1];
-  //data[1]=0;
-  //if (f->n%2)
-  //  data[f->n/2+1]=0;
   if (ier)
     return ier;
   return 0;
@@ -491,10 +487,6 @@ int rfft_inverse(fft_t *f, const void *inp, fft_real_t *outp){
     outp[i] = data[i+1];
 
   rfft1b_(&f->n, &inc, outp, &f->n, f->save, &f->lensav, f->work, &f->lenwork, &ier);
-  //data[0]=data[1];
-  //data[1]=0;
-  //if (f->n%2)
-  //  data[f->n/2+1]=0;
   if (ier)
     return ier;
   return 0;
