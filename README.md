@@ -6,7 +6,7 @@ I finally decided to do a proper wrapper for the full thing, and open source it 
 permissive license, so I could use it for both personal and commercial projects. If other
 people find it useful that is cool too.
 
-This is alpha, pre release code. Not everything works properly yet.
+Current status is BETA. Most things work except for stride modifications on some calcs.
 
 Those with a quantitative finance background might find the test directory interesting. It contains
 some work from as yet unpublished papers of mine.
