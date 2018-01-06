@@ -5,9 +5,9 @@ project(CFFTPACK)
 
 set (CMAKE_CXX_STANDARD 11)
 
-INCLUDE(CheckCSourceCompiles)
+INCLUDE(CheckCSourceRuns)
 
-CHECK_C_SOURCE_COMPILES("#include <math.h>
+CHECK_C_SOURCE_RUNS("#include <math.h>
 int main(){ log(4.0) + sin(0.5); return 0; }"
 MATH_LIB_NOT_NEEDED)
 
