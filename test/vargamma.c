@@ -14,7 +14,7 @@ Roy Zywina, (c) 2017, MIT licence (https://opensource.org/licenses/MIT)
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-
+#include <tgmath.h>
 #include "util.h"
 
 

@@ -15,6 +15,7 @@ Roy Zywina, (c) 2017, MIT licence (https://opensource.org/licenses/MIT)
 #include <cfftpack/cfftpack.h>
 #include <cfftpack/cfftextra.h>
 #include <complex.h>
+#include <tgmath.h>
 
 #ifdef __cplusplus
 extern "C"{
