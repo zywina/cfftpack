@@ -10,10 +10,10 @@
 #include "util.h"
 
 
-
+#define N1 16
 void test1(){
-  const int N = 16;
-  complex fft_real_t data[N],data2[N],data3[N];
+  const int N = N1;
+  complex fft_real_t data[N1],data2[N1],data3[N1];
   int i,j;
   fft_t *f = fft_create(N);
   bool ortho=false;
@@ -47,9 +47,10 @@ void test1(){
 
 }
 
+#define N2 32
 void test2(){
-  const int N = 32;
-  fft_real_t data[N], data1[N], data2[N], data3[N], data4[N];
+  const int N = N2;
+  fft_real_t data[N2], data1[N2], data2[N2], data3[N2], data4[N2];
   memset(data,0,sizeof(fft_real_t)*N);
   int i,ret;
   data[0]=0;
@@ -147,11 +148,13 @@ void print2d(int N,int M,fft_real_t _Complex *x){
   }
 }
 
+#define N3 8
+#define M3 6
+#define LEN3 (N3*M3)
 void test3(){
-    const int N = 6;
-    const int M = 6;
-    const int LEN = M*N;
-    fft_real_t _Complex x[LEN], y[LEN];
+    const int N = N3;
+    const int M = M3;
+    fft_real_t _Complex x[LEN3], y[LEN3];
     int i,j;
 
     for (i=0; i<N; i++){
@@ -159,7 +162,7 @@ void test3(){
         x[N*j+i] = 100.0/(i+j+1) + I*(i+j);
       }
     }
-    memcpy(y,x,sizeof(fft_real_t _Complex)*LEN);
+    memcpy(y,x,sizeof(fft_real_t _Complex)*LEN3);
 
     print2d(N,M,x);
     printf("\n\n");
@@ -211,12 +214,14 @@ void testshift(){
 
 }
 
-
+#define N4 15
+#define M4 6
+#define LEN4 (N4*M4)
 void test_dct_2d(){
-  const int M = 12;
-  const int N = 6;
-  const int LEN = M*N;
-  fft_real_t data1[LEN],data2[LEN],data3[LEN];
+  const int M = N4;
+  const int N = M4;
+  const int LEN =LEN4;
+  fft_real_t data1[LEN4],data2[LEN4],data3[LEN4];
   int i,j;
   for (j=0; j<N; j++){
     for (i=0; i<M; i++){
@@ -253,12 +258,15 @@ void test_dct_2d(){
   fft_free(f);
 }
 
+#define N5 128
+#define M5 128
+#define LEN5 (N5*M5)
 void time_dcct_2d(){
   clock_t start,end;
-  const int M = 128;
-  const int N = 128;
+  const int M = M5;
+  const int N = N5;
   const int LEN = M*N;
-  static fft_real_t data1[LEN],data2[LEN],data3[LEN];
+  static fft_real_t data1[LEN5],data2[LEN5],data3[LEN5];
   int i,j;
   for (j=0; j<N; j++){
     for (i=0; i<M; i++){
