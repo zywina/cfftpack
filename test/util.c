@@ -7,6 +7,9 @@
 #include <stdint.h>
 #include <math.h>
 
+#ifndef M_PI
+#define M_PI (3.14159265358979323846)
+#endif
 
 static uint32_t xorshift_state = 12345678;
 

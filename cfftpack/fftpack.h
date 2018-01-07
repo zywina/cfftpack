@@ -48,9 +48,6 @@ This code is in the public domain.
 #ifndef _FFTPACK_H_
 #define _FFTPACK_H_
 
-#ifndef _USE_MATH_DEFINES
-#define _USE_MATH_DEFINES
-#endif
 #include <math.h>
 #include <stdlib.h>
 

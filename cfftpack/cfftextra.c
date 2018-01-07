@@ -2,6 +2,10 @@
 #include <string.h>
 #include "cfftextra.h"
 
+#ifndef M_PI
+#define M_PI (3.14159265358979323846)
+#endif
+
 #ifndef min
 #define min(a,b) ((a)<(b)?(a):(b))
 #endif

@@ -17,6 +17,9 @@ Roy Zywina, (c) 2017, MIT licence (https://opensource.org/licenses/MIT)
 #include <tgmath.h>
 #include "util.h"
 
+#ifndef M_PI
+#define M_PI (3.14159265358979323846)
+#endif
 
 #ifndef max
 #define max(a,b) ((a)>(b)?(a):(b))

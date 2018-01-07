@@ -5,6 +5,10 @@
 #include <string.h>
 #include <complex.h>
 
+#ifndef M_PI
+#define M_PI (3.14159265358979323846)
+#endif
+
 void naive_dct1(int N, const fft_real_t *x, fft_real_t *y, int mode){
   int n,k;
   double M = N-1;

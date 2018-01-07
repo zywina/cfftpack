@@ -20,7 +20,9 @@ Roy Zywina, (c) 2017, MIT licence (https://opensource.org/licenses/MIT)
 #include <algorithm>
 using namespace std;
 
-
+#ifndef M_PI
+#define M_PI (3.14159265358979323846)
+#endif
 
 void VarianceGammaMonteCarlo(){
   const int N = 1024*2;
