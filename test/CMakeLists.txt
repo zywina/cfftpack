@@ -33,3 +33,22 @@ target_link_libraries (montecarlo cfftpack ${LIBM})
 
 add_executable(blackscholes blackscholes.cpp util.h util.c)
 target_link_libraries (blackscholes cfftpack ${LIBM})
+
+find_path ( QuantLib_Includes ql/quantlib.hpp)
+find_library ( QuantLib_Library NAMES QuantLib)
+
+# may require some hacking on windows to work
+#set(QuantLib_Includes "c:/temp/quantlib")
+#set(QuantLib_Library "c:/temp/quantlib/lib")
+
+#programs that require quantlib
+
+if(QuantLib_Includes AND QuantLib_Library)
+  include_directories (${QuantLib_Includes})
+
+  add_executable(vargammaql vargammaql.cpp)
+  target_link_libraries (vargammaql cfftpack ${QuantLib_Library} ${LIBM})
+
+  add_executable(shortrate shortrate.cpp)
+  target_link_libraries (shortrate cfftpack ${QuantLib_Library} ${LIBM})
+endif()

@@ -116,6 +116,7 @@ void run_tests(){
   K = 98;
   // generated from QuantLib, see vargammaql.cpp
   double VGtarget = 9.3424659413582116;
+                  //9.3424663333837259
 
   printf("\nStock Option Pricing Benchmark\n\n");
   printf("Stock Price: $ %.2f\n", S);
