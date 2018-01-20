@@ -35,7 +35,7 @@ typedef function<complex<double> (double u,double dt)> CharacteristcFunction;
 // conversion of Levy process to short rate function
 typedef function<double(double x,double gamma)> ShortRateConv;
 
-// a time step on thr lattice (I call it a mesh)
+// a time step on the lattice (I call it a mesh)
 class Step{
 public:
   double term, dt, bond, gamma;
@@ -71,7 +71,6 @@ class Mesh{
 public:
   fft_t *pfft;
   TimeGrid times;
-  function<complex<double> (double u,double dt)> charFunc;
   // ength of real an complex arrays
   int N, NC;
   // time step objects
@@ -101,7 +100,7 @@ public:
     fm = phi(0,maxTerm); // should always be (1,0)
     fd = phi(-h,maxTerm);
     if (abs(fm.real()-1)>1e-12 || abs(fm.imag())>1e-12)
-      throw logic_error("characteristic funtion incorrect");
+      throw logic_error("characteristic function incorrect");
     complex<double> dphi,d2phi;
 
     dphi = (fu-fd)/(2*h);
@@ -266,6 +265,30 @@ struct NormalInverseGaussian{
   }
 };
 
+/*
+alpha stable Levy distribution
+alpha in (0,2], tail fatness, lower is fatter
+beta in [-1,1], skew
+c >=0, scale
+*/
+struct AlphaStable{
+  double alpha, beta, c;
+  AlphaStable(double a, double b, double c_){
+    alpha=a; beta=b; c=c_;
+  }
+  // cf
+  complex<double> operator()(double u,double dt){
+    complex<double> I(0,1),psi;
+    double Phi;
+    if (fabs(alpha-1)<1e-6)
+      Phi = -log(fabs(dt))*2.0/M_PI;
+    else
+      Phi = tan(M_PI*alpha/2.0);
+    double sgn = u>=0 ? 1 : -1;
+    psi = -pow(fabs(c*u),alpha)*(1.0 - I*beta*sgn*Phi);
+    return exp(psi*dt);
+  }
+};
 
 // short rate conversion functions
 double exponentialLevy(double x,double gamma){
@@ -302,7 +325,7 @@ void testCallableBond(){
 
   double meanReversion = 0.01;
   double callPenalty = 1.02; // early exercise penalty
-  int model = 0; // chose from stochastic models below
+  int model = 4; // chose from stochastic models below
 
 
   CharacteristcFunction cf;
@@ -335,6 +358,21 @@ void testCallableBond(){
     // claim that it 'should' replicate.
     cf = NormalInverseGaussian(100.14,5.52,6.361e-5);
     shortRate = linearLevy;
+  }else if (model==4){
+    /*
+    We can also go off the beaten path and try arbitrary combinations
+    of settings. Alpha stable Levy distributions are pretty flexible
+    with few parameters and can be made to fit reasonably to financial
+    markets. An inviting research model. CGMY is also interesting but
+    the interplay of parameters make it unusable in an optimization.
+    */
+    double alpha = 1.8;
+    double beta = 0;
+    double c = 0.08;
+    double shift = 0.02;
+    cf = AlphaStable(alpha,beta,c);
+    shortRate = bind(shiftedExponentialLevy,
+      shift, placeholders::_1, placeholders::_2);
   }
 
 

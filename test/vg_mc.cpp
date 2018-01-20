@@ -69,7 +69,7 @@ void VarianceGammaMonteCarlo(){
     complex<double> phi = conj(vgcf(u));
     prob[i] *= phi;
   }
-  fftshift(prob.data(),N);
+  ifftshift(prob.data(),N);
   fft_inverse(f,prob.data());
   fft_free(f);
 
