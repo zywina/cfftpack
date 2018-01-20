@@ -1,8 +1,8 @@
 /*
 A minimal implementation of the FFT short rate model described in
-my paper (https://ssrn.com/abstract=2984393
+my paper (https://ssrn.com/abstract=2984393)
 
-This implementation concerns the pricing of a callable bond and). Uses RFFT
+This implementation concerns the pricing of a callable bond. Uses RFFT
 for small speed boost.
 
 Requires QuantLib & boost.
@@ -279,7 +279,9 @@ double shiftedExponentialLevy(double shift,double x,double gamma){
 }
 
 /*
-A
+Price a bond that the issuer may pay back early with a penalty.
+They will do this if rates go down enough that they can refinance
+at a lower rate.
 */
 void testCallableBond(){
   // Bond setup
@@ -292,14 +294,17 @@ void testCallableBond(){
   Calendar calendar = UnitedStates();
   DayCounter dayCount = Thirty360();
   BusinessDayConvention roll = ModifiedFollowing;
-
+  // true to only allow exercise on cf dates, false for american exercise
+  bool isBermudan = false;
   // Option setup
-  int nstep = 360;
-  int Nfft = 2048;
+  int nstep = 500; // time steps
+  int Nfft = 2048; // fft array length
 
   double meanReversion = 0.01;
   double callPenalty = 1.02; // early exercise penalty
-  int model = 1; // chose from stochastic models
+  int model = 0; // chose from stochastic models below
+
+
   CharacteristcFunction cf;
   ShortRateConv shortRate;
   if (model==0){
@@ -332,10 +337,8 @@ void testCallableBond(){
     shortRate = linearLevy;
   }
 
-  // true to only allow exercise on cf dates, false for american exercise
-  bool isBermudan = false;
 
-  // Rate curve setup with made up numbers
+  // Rate curve with made up numbers
   vector<int> rterms = {0, 1,2,5,10,20,30};
   vector<double> rates = {0.018, 0.02,0.0225,0.025,0.03,0.032,0.034};
   vector<Date> rdates;
@@ -363,6 +366,7 @@ void testCallableBond(){
   TimeGrid tg(reqTimes.begin(), reqTimes.end(), nstep);
   Mesh mesh(Nfft, tg);
   mesh.initialize(meanReversion, cf);
+  // we fit to these discount factors
   for (size_t i=0; i<mesh.step.size(); i++){
     Step &s = mesh.step[i];
     s.bond = zeroCurve->discount(s.term);
