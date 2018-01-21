@@ -27,7 +27,10 @@ using namespace std;
 #include <boost/math/constants/constants.hpp>
 using namespace boost::math::constants;
 
-#include <ql/quantlib.hpp>
+#include <ql/math/solvers1d/brent.hpp>
+#include <ql/timegrid.hpp>
+#include <ql/time/all.hpp>
+#include <ql/termstructures/yield/zerocurve.hpp>
 using namespace QuantLib;
 
 // characteristic function of a Levy process
