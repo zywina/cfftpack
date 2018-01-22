@@ -1,6 +1,9 @@
 /*
 A minimal implementation of the FFT short rate model described in
-my paper (https://ssrn.com/abstract=2984393)
+my paper (https://ssrn.com/abstract=2984393). This model has as advantages
+of a high degree of configurability and good numerical precision. We can
+replicate a number of well known (and not so well known) short rate
+models with it and can create arbitrarily complex new ones.
 
 This implementation concerns the pricing of a callable bond. Uses RFFT
 for small speed boost.
@@ -24,14 +27,15 @@ Roy Zywina, (c) 2017, MIT licence (https://opensource.org/licenses/MIT)
 #include <stdexcept>
 using namespace std;
 
-#include <boost/math/constants/constants.hpp>
-using namespace boost::math::constants;
-
 #include <ql/math/solvers1d/brent.hpp>
 #include <ql/timegrid.hpp>
 #include <ql/time/all.hpp>
 #include <ql/termstructures/yield/zerocurve.hpp>
 using namespace QuantLib;
+
+#ifndef M_PI
+#define M_PI (3.14159265358979323846)
+#endif
 
 // characteristic function of a Levy process
 typedef function<complex<double> (double u,double dt)> CharacteristcFunction;
@@ -41,30 +45,33 @@ typedef function<double(double x,double gamma)> ShortRateConv;
 // a time step on the lattice (I call it a mesh)
 class Step{
 public:
+  // term, delta t to next step, $1 bond (discount factor), fitting constant
   double term, dt, bond, gamma;
-  vector<complex<double>> phi;
-  vector<double> x, u, r, fdf, ad, p;
+  // Levy process space, frequencies, short rate, fwd discount factor, AD price
+  vector<double> x, u, r, fdf, ad;
+  // security value
   vector<double> value;
+  // is option exercisable here
   bool canExercise;
+  // CF and AI
   double cashFlow, accrued;
   Step(){
     term=dt=bond=gamma=0;
     canExercise=false;
     cashFlow=accrued=0;
   }
+  // number of real & complex vals
   void resize(int N, int NC){
-    phi.resize(NC,0.0);
     u.resize(NC,0.0);
     x.resize(N,0);
     r.resize(N,0);
     fdf.resize(N,0);
     ad.resize(N,0);
-    p.resize(N,0);
     value.resize(N,0);
   }
 
   void printDebug(int i){
-    printf("step %3d, t %6.3f, df %.4f, gamma %.5f, CF %.2f, AI %.4f\n",
+    printf("step %3d, t %6.3f, df %.4f, gamma %8.5f, CF %8.2f, AI %8.2f\n",
       i, term, bond, gamma, cashFlow, accrued);
   }
 };
@@ -74,11 +81,14 @@ class Mesh{
 public:
   fft_t *pfft;
   TimeGrid times;
-  // ength of real an complex arrays
+  // length of real an complex arrays
   int N, NC;
   // time step objects
   vector<Step> step;
+  // cf funtion of underlying process
   CharacteristcFunction phi;
+  // settings for root finder
+  double rootGuess, rootStep, rootLimitLow, rootLimitHigh;
 
   Mesh(int Nfft, const TimeGrid &tg){
     times = tg;
@@ -89,6 +99,10 @@ public:
     for (size_t i=0; i<step.size(); i++){
       step[i].resize(N,NC);
     }
+    rootGuess=0;
+    rootStep=0.5;
+    rootLimitLow = - 1e6;
+    rootLimitHigh = 1e6;
   }
   ~Mesh(){
     fft_free(pfft);
@@ -123,7 +137,7 @@ public:
     double maxTerm = times.back();
     double L = 2*10*sigma * exp(meanRev*maxTerm) ;
     double dxm = L/N;
-    double dum = 2.0*pi<double>()/(dxm*N);
+    double dum = 2.0*M_PI/(dxm*N);
     int n = N/2;
     for (size_t i=0; i<step.size(); i++){
       Step &s = step[i];
@@ -142,8 +156,8 @@ public:
       }
       for (j=0; j<NC; j++){
         s.u[j] = j*dui;
-        s.phi[j] = phi(s.u[j], s.dt);
-        //cout<<j<<", "<<s.u[j]<<", "<<s.phi[j]<<endl;
+        //complex<double> s_phi = phi(s.u[j], s.dt);
+        //cout<<j<<", "<<s.u[j]<<", "<<s_phi<<endl;
       }
     }
 
@@ -160,7 +174,7 @@ public:
     for (size_t i=0; i<step.size()-1; i++){
       // optimize out the fitting term gamma
       fitStep(i, conv);
-      // with gamma found set up rates arrays an diffuse to next step
+      // with gamma found set up rates arrays and diffuse to next step
       Step &s = step[i];
       for (int j=0; j<N; j++){
         s.r[j] = conv(s.x[j], s.gamma);
@@ -182,17 +196,20 @@ public:
   void fitStep(int i, ShortRateConv conv){
     double B = step[i+1].bond;
     Step &s = step[i];
-    double prevGamma = 0;
+    double prevGamma = rootGuess;
     if (i>0) prevGamma = step[i-1].gamma;
     auto f = [&](double g){
       double value=0;
       for (int j=0; j<N; j++){
         value += s.ad[j] * exp(-s.dt * conv(s.x[j],g));
       }
-      //cout<< g<<", "<<value<<", "<<B<<endl;
+      //cout<< i<<": "<<g<<", "<<value<<", "<<B<<endl;
       return value - B;
     };
-    s.gamma = Brent().solve(f, 1e-14, prevGamma, 0.5);
+    Brent fitter;
+    fitter.setLowerBound(rootLimitLow);
+    fitter.setUpperBound(rootLimitHigh);
+    s.gamma = fitter.solve(f, 1e-14, prevGamma, rootStep);
   }
 
   void printSteps(){
@@ -250,7 +267,7 @@ complex<double> normalCharacteristcFunction(double sigma,double u,double t){
   return exp(-0.5*sigma*sigma*u*u*t);
 }
 
-// see Hainaut and MacGilchrist (2010) for an attempt at
+// see Hainaut and MacGilchrist (2010) for an algorithm
 // using this process with a pentanomial tree
 struct NormalInverseGaussian{
   double alpha,beta,delta,gamma;
@@ -284,7 +301,7 @@ struct AlphaStable{
     complex<double> I(0,1),psi;
     double Phi;
     if (fabs(alpha-1)<1e-6)
-      Phi = -log(fabs(dt))*2.0/M_PI;
+      Phi = -log(fabs(u))*2.0/M_PI;
     else
       Phi = tan(M_PI*alpha/2.0);
     double sgn = u>=0 ? 1 : -1;
@@ -302,6 +319,9 @@ double linearLevy(double x,double gamma){
 }
 double shiftedExponentialLevy(double shift,double x,double gamma){
   return exp(x+gamma)-shift;
+}
+double squareLevy(double x,double gamma){
+  return pow(x+gamma,2.0);
 }
 
 /*
@@ -328,8 +348,10 @@ void testCallableBond(){
 
   double meanReversion = 0.01;
   double callPenalty = 1.02; // early exercise penalty
-  int model = 4; // chose from stochastic models below
+  int model = 5; // chose from stochastic models below
 
+  bool setGuess=false;
+  double rootGuess = 0, rootStep = 0;
 
   CharacteristcFunction cf;
   ShortRateConv shortRate;
@@ -363,6 +385,21 @@ void testCallableBond(){
     shortRate = linearLevy;
   }else if (model==4){
     /*
+    normal diffusion with squared conversion function is the
+    Pelsser (1997) model. It can sometimes fail to fit as the fitting
+    optimization has 2 solutions it can find, only the positive root
+    works.
+    */
+    double sigma = 0.02;
+    // these need tuning to ensure fit
+    rootGuess = 0.1;
+    rootStep = 0.01;
+    setGuess = true;
+    cf = bind(normalCharacteristcFunction,
+      sigma, placeholders::_1, placeholders::_2);
+    shortRate = squareLevy;
+  }else if (model==5){
+    /*
     We can also go off the beaten path and try arbitrary combinations
     of settings. Alpha stable Levy distributions are pretty flexible
     with few parameters and can be made to fit reasonably to financial
@@ -388,7 +425,7 @@ void testCallableBond(){
     rdates.push_back(d);
   }
 
-  boost::shared_ptr<YieldTermStructure> zeroCurve(
+  shared_ptr<YieldTermStructure> zeroCurve(
     new InterpolatedZeroCurve<Linear>(rdates,rates,dayCount));
 
   Schedule sched = MakeSchedule().from(issue).to(maturity)
@@ -411,6 +448,12 @@ void testCallableBond(){
   for (size_t i=0; i<mesh.step.size(); i++){
     Step &s = mesh.step[i];
     s.bond = zeroCurve->discount(s.term);
+  }
+  if(setGuess){
+    // need to tune these a bit for Pelsser model
+    mesh.rootGuess = rootGuess;
+    mesh.rootStep = rootStep;
+    mesh.rootLimitLow = 1e-8;
   }
   mesh.fit(shortRate);
   //setup bond cashflows and accrued interest
@@ -439,7 +482,8 @@ void testCallableBond(){
     for (size_t i=0; i<mesh.step.size(); i++)
       mesh.step[i].canExercise = true;
   }
-  //mesh.printSteps();
+
+  mesh.printSteps();
 
   // price bond normally as sum of CF * discount
   double bondPV=0;
