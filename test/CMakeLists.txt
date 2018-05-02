@@ -25,6 +25,9 @@ endif(MSVC)
 add_executable(ftest ftest.c)
 target_link_libraries (ftest cfftpack ${LIBM})
 
+add_executable(test2 test2.c)
+target_link_libraries (test2 cfftpack ${LIBM})
+
 add_executable(vg_mc vg_mc.cpp)
 target_link_libraries (vg_mc cfftpack ${LIBM})
 
