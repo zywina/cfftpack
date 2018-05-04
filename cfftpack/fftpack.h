@@ -180,7 +180,12 @@ enum{
   ALGO_DST1,
   ALGO_DST,
   ALGO_DST4,
-  ALGO_DCT_2D
+  ALGO_DCT_2D,
+  ALGO_GDFT,
+  ALGO_DCT5,
+  ALGO_DCT6,
+  ALGO_DCT7,
+  ALGO_DCT8
 };
 
 struct FFT_{

@@ -223,7 +223,14 @@ int dst_forward(fft_t *f, fft_real_t *data);
 /// DST-II transform
 int dst_inverse(fft_t *f, fft_real_t *data);
 
+/**
+@brief Create DST-I object
+@param size length of array
 
+
+Create work object for discrete sine transform variant 1. Use #fft_free to
+deallocate.
+*/
 fft_t *dst1_create(int size);
 /// DST-I transform
 int dst1_forward(fft_t *f, fft_real_t *data);
