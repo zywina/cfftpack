@@ -377,11 +377,11 @@ fft_t *gdft_create(int size,double a,double b){
   int i;
 
   for (i=0; i<size; i++){
-    // twiddle factor for time shift
+    // factor for time shift
     w = -2.0*M_PI*i*a/size;
     st[i*2  ] = cos(w);
     st[i*2+1] = sin(w);
-    // twiddle factor for frequency shift
+    // factor for frequency shift
     w = -2.0*M_PI*(i+a)*b/size;
     sf[i*2  ] = cos(w);
     sf[i*2+1] = sin(w);
@@ -472,7 +472,6 @@ int dct5_forward(fft_t *f, fft_real_t *data){
   mul = 1.0 / (2*f->n-1);
   if (f->ortho){
     return 0;
-    //mul= sqrt(mul);
   }
   int i;
   for (i=0; i<f->n; i++){
@@ -495,9 +494,6 @@ int dct5_inverse(fft_t *f, fft_real_t *data){
   for (i=0; i<N-1; i++){
     x[(i+N)*2] = data[N-i-1];
   }
-  //for (i=0; i<f->m; i++){
-  //  printf("dct5 %3d: %f\n",i,x[i]);
-  //}
   rfft_forward(f->sub,x,x);
   fft_real_t mul=M;
   if (f->ortho){
@@ -525,7 +521,7 @@ fft_t *dct7_create(int size){
   f->n = size;
   f->m = M;
   f->work = calloc(2*M, sizeof(fft_real_t));
-  f->lenwork = M;
+  f->lenwork = M*2;
   f->sub = gdft_create(M,0.5,0);
   if (!f->sub){
     fft_free(f);
@@ -542,24 +538,18 @@ int dct7_transform(fft_t *f, fft_real_t *data){
   N=f->n;
   M=2*N-1;
   fft_real_t *x=f->work;
-  memset(x,0,sizeof(fft_real_t)*f->m);
+  memset(x,0,sizeof(fft_real_t)*f->lenwork);
   for (i=0; i<N; i++){
     x[i*4] = data[i];
   }
   for (i=0; i<N-1; i++){
     x[(i+N)*4] = -data[N-i-1];
   }
-  //for (i=0; i<M*4; i++){
-  //  printf("dct7 %3d: %f\n",i,x[i]);
-  //}
   gdft_forward(f->sub,x);
   fft_real_t mul=2;
   if (f->ortho){
     mul = sqrt(M);
   }
-  //for (i=0; i<M; i++){
-  //  printf("%d: %f + %f*j\n",i,x[2*i]*mul,x[2*i+1]*mul);
-  //}
   for (i=0; i<N; i++){
     data[i] = x[i*2]*mul;
   }
@@ -584,7 +574,6 @@ fft_t *dct6_create(int size){
   f->work = calloc(N*4+1, sizeof(fft_real_t));
   f->lenwork = M;
   f->sub = rfft_create(M*2);
-  //gdft_create(M,0,0.5);
   if (!f->sub){
     fft_free(f);
     return NULL;
@@ -607,9 +596,6 @@ int dct6_transform(fft_t *f, fft_real_t *data){
   for (i=0; i<N-1; i++){
     x[(i+N)*2+1] = data[N-i-2];
   }
-  //for (i=0; i<M*2; i++){
-  //  printf("dct6 %3d: %f\n",i,x[i]);
-  //}
   rfft_forward(f->sub,x,x);
   fft_real_t mul=M;
   if (f->ortho){
@@ -619,10 +605,6 @@ int dct6_transform(fft_t *f, fft_real_t *data){
     data[i] = x[i*2]*mul;
   }
   data[0]*=2;
-  //for (i=0; i<M; i++){
-  //  printf("%d: %f + %f*j\n",i,x[2*i]*mul,x[2*i+1]*mul);
-  //}
-
   return 0;
 }
 
@@ -643,7 +625,6 @@ fft_t *dct8_create(int size){
   f->work = calloc(M*2, sizeof(fft_real_t));
   f->lenwork = M*2;
   f->sub = gdft_create(M,0.5,0.5);
-  //printf("GDFT %d\n",M);
   if (!f->sub){
     fft_free(f);
     return NULL;
@@ -665,22 +646,10 @@ int dct8_transform_internal(fft_t *f, fft_real_t *data){
   for (i=0; i<N; i++){
     x[(i+N)*2+2] = -data[N-i-1];
   }
-  //for (i=0; i<M*2; i++){
-  //  printf("dct6 %3d: %f\n",i,x[i]);
-  //}
   gdft_forward(f->sub,x);
-
-  //fft_real_t mul=M*2;
-  //if (f->ortho){
-  //  mul = sqrt(M);
-  //}
   for (i=0; i<N; i++){
-    data[i] = x[i*2];//*mul;
+    data[i] = x[i*2];
   }
-  //data[0]*=2;
-  //for (i=0; i<M; i++){
-  //  printf("%d: %f + %f*j\n",i,x[2*i]*mul,x[2*i+1]*mul);
-  //}
   return 0;
 }
 
@@ -691,11 +660,9 @@ int dct8_forward(fft_t *f, fft_real_t *data){
   double mul;
   if (f->ortho){
     mul = sqrt(f->m);
-  }else{
-    mul = 1;//sqrt(f->m*2);
-  }
-  for (i=0; i<f->n; i++){
-    data[i]*=mul;
+    for (i=0; i<f->n; i++){
+      data[i]*=mul;
+    }
   }
   return 0;
 }

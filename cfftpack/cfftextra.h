@@ -166,7 +166,7 @@ filling a padded array and using a FFT.
 Based on S. Martucci (1994) "Symmetric Convolution and the
 Discrete Sine and Cosine Transforms"
 
-Length should be chosen so than 2*N-1 is a fast size.
+Length should be chosen so 2*N-1 is a fast size.
 */
 fft_t *dct5_create(int size);
 int dct5_forward(fft_t *f, fft_real_t *data);
@@ -179,7 +179,7 @@ int dct5_inverse(fft_t *f, fft_real_t *data);
 DCT-VI is the "odd" equivalent of the "even" DCT-II. The DCT-VII transform is
 it's inverse.
 
-Length should be chosen so than 2*N-1 is a fast size.
+Length should be chosen so 2*N-1 is a fast size.
 */
 fft_t *dct6_create(int size);
 /// DCT-VI transform
@@ -194,7 +194,7 @@ DCT-VII is the "odd" equivalent of the "even" DCT-III. The DCT-VI transform is
 it's inverse. Following fftpack convention we (arbitrarily) declare this the
 "forward" transform and apply the full 1/(2*N-1) scaling.
 
-Length should be chosen so than 2*N-1 is a fast size.
+Length should be chosen so 2*N-1 is a fast size.
 */
 fft_t *dct7_create(int size);
 /// DCT-VII transform
@@ -206,7 +206,7 @@ int dct7_transform(fft_t *f, fft_real_t *data);
 
 DCT-VIII is the "odd" equivalent of the "even" DCT-IV. It is it's own inverse.
 
-Length should be chosen so than 2*N+1 is a fast size.
+Length should be chosen so 2*N+1 is a fast size.
 */
 fft_t *dct8_create(int size);
 int dct8_forward(fft_t *f, fft_real_t *data);
