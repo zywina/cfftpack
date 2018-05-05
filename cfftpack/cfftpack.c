@@ -2,6 +2,7 @@
 #include <string.h>
 #include "fftpack.h"
 #include "cfftpack.h"
+#include "cfftintern.h"
 
 
 

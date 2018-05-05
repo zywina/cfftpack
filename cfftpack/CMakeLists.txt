@@ -5,6 +5,7 @@ set(CFFTPACK_SRC
   fftpack.h
   cfftpack.c
   cfftpack.h
+  cfftintern.h
   cfftextra.c
   cfftextra.h
 )

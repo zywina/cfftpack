@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdio.h>
 #include "cfftextra.h"
+#include "cfftintern.h"
 
 #ifndef M_PI
 #define M_PI (3.14159265358979323846)
@@ -42,6 +43,42 @@ int fft_next_fast_even_size(int n){
   if (n<=2) return 2;
   if (n%2) n++;
   return fft_next_fast_size_internal(n,2);
+}
+
+int fft_next_fast_size_2nm1(int n){
+  if (n<=0) return 1;
+  int m;
+  do{
+    m=n*2-1;
+    do{
+      if (m%5==0) m/=5;
+      else if (m%3==0) m/=3;
+      else if (m%2==0) m/=2;
+      else{
+        n++;
+        break;
+      }
+    }while(m>1);
+  }while (m>1);
+  return n;
+}
+
+int fft_next_fast_size_2np1(int n){
+  if (n<=0) return 1;
+  int m;
+  do{
+    m=n*2+1;
+    do{
+      if (m%5==0) m/=5;
+      else if (m%3==0) m/=3;
+      else if (m%2==0) m/=2;
+      else{
+        n++;
+        break;
+      }
+    }while(m>1);
+  }while (m>1);
+  return n;
 }
 
 int cfftpack_even_fftshift(void *vdata, int n){
@@ -679,6 +716,243 @@ int dct8_inverse(fft_t *f, fft_real_t *data){
   }
   for (i=0; i<f->n; i++){
     data[i]*=mul;
+  }
+  return 0;
+}
+
+fft_t *dst5_create(int size){
+  if (size<1) return NULL;
+
+  int N,M;
+  N = size+1;
+  M = (2*N-1);
+
+  fft_t *f = (fft_t*)malloc(sizeof(fft_t));
+  if (!f) return NULL;
+  memset(f,0,sizeof(fft_t));
+  f->algo = ALGO_DCT5;
+  f->inc=1;
+  f->n = size;
+  f->m = M;
+  f->work = calloc(M*2, sizeof(fft_real_t));
+  f->lenwork = M*2;
+  f->sub = fft_create(M);
+  if (!f->sub){
+    fft_free(f);
+    return NULL;
+  }
+  return f;
+}
+
+int dst5_forward(fft_t *f, fft_real_t *data){
+  int ret = dst5_inverse(f,data);
+  if (ret) return ret;
+  fft_real_t mul;
+  mul = 1.0 / f->m;
+  if (f->ortho){
+    return 0;
+  }
+  int i;
+  for (i=0; i<f->n; i++){
+    data[i] = data[i]*mul;
+  }
+  return 0;
+}
+
+int dst5_inverse(fft_t *f, fft_real_t *data){
+  if (!f || !data) return -1;
+  if (f->algo!=ALGO_DCT5) return -2;
+  int i,N,M;
+  N=f->n+1;
+  M=2*N-1;
+  fft_real_t *x=f->work;
+  memset(x,0,sizeof(fft_real_t)*f->lenwork);
+  for (i=0; i<f->n; i++){
+    x[i*2+3] = data[i];
+  }
+  for (i=0; i<f->n; i++){
+    x[(i+N)*2+1] = -data[f->n-i-1];
+  }
+  for (i=0; i<f->m; i++){
+    //printf("%d: %f\n",i,x[i]);
+  }
+  //exit(0);
+  fft_forward(f->sub,x);
+  for (i=0; i<f->m; i++){
+    //printf("%d: %f\n",i,x[i]);
+  }
+  fft_real_t mul=M;
+  if (f->ortho){
+    mul = sqrt(M);
+  }
+  for (i=0; i<N; i++){
+    data[i] = x[i*2+2]*mul;
+  }
+  //data[0]*=2;
+  return 0;
+}
+
+
+fft_t *dst6_create(int size){
+  if (size<1) return NULL;
+
+  int N,M;
+  N = size;
+  M = (2*N+1);
+
+  fft_t *f = (fft_t*)malloc(sizeof(fft_t));
+  if (!f) return NULL;
+  memset(f,0,sizeof(fft_t));
+  f->algo = ALGO_DST6;
+  f->inc=1;
+  f->n = size;
+  f->m = M;
+  f->work = calloc(M*2, sizeof(fft_real_t));
+  f->lenwork = M*2;
+  f->sub = gdft_create(M,0,0.5);
+  if (!f->sub){
+    fft_free(f);
+    return NULL;
+  }
+  return f;
+}
+
+/// DST-VI transform
+int dst6_transform(fft_t *f, fft_real_t *data){
+  if (!f || !data) return -1;
+  if (f->algo!=ALGO_DST6) return -2;
+  int i,N,M;
+  N=f->n;
+  M=2*N+1;
+  fft_real_t *x=f->work;
+  memset(x,0,sizeof(fft_real_t)*f->m);
+  for (i=0; i<N; i++){
+    x[i*2+1] = data[i];
+  }
+  for (i=0; i<N; i++){
+    x[(i+N)*2+3] = -data[N-i-1];
+  }
+  gdft_forward(f->sub,x);
+  fft_real_t mul=1;
+  if (f->ortho){
+    mul = sqrt(M);
+  }
+  for (i=0; i<N; i++){
+    data[i] = x[i*2+2]*mul;
+  }
+  return 0;
+}
+
+fft_t *dst7_create(int size){
+  if (size<1) return NULL;
+
+  int N,M;
+  N = size;
+  M = 2*N+1;
+
+  fft_t *f = (fft_t*)malloc(sizeof(fft_t));
+  if (!f) return NULL;
+  memset(f,0,sizeof(fft_t));
+  f->algo = ALGO_DST7;
+  f->inc=1;
+  f->n = size;
+  f->m = M;
+  f->work = calloc(M*2, sizeof(fft_real_t));
+  f->lenwork = M*2;
+  f->sub = gdft_create(M,0.5,0);
+  if (!f->sub){
+    fft_free(f);
+    return NULL;
+  }
+  return f;
+}
+
+/// DCT-VII transform
+int dst7_transform(fft_t *f, fft_real_t *data){
+  if (!f || !data) return -1;
+  if (f->algo!=ALGO_DST7) return -2;
+  int i,N,M;
+  N=f->n;
+  M=2*N+1;
+  fft_real_t *x=f->work;
+  memset(x,0,sizeof(fft_real_t)*f->lenwork);
+  for (i=0; i<N; i++){
+    x[i*2+3] = data[i];
+  }
+  for (i=0; i<N; i++){
+    x[(i+N)*2+3] = data[N-i-1];
+  }
+  gdft_forward(f->sub,x);
+  fft_real_t mul=M;
+  if (f->ortho){
+    mul = sqrt(M);
+  }
+  for (i=0; i<N; i++){
+    data[i] = x[i*2]*mul;
+  }
+  return 0;
+}
+
+fft_t *dst8_create(int size){
+  if (size<1) return NULL;
+
+  int N,M;
+  N = size;
+  M = (2*N-1);
+
+  fft_t *f = (fft_t*)malloc(sizeof(fft_t));
+  if (!f) return NULL;
+  memset(f,0,sizeof(fft_t));
+  f->algo = ALGO_DCT8;
+  f->inc=1;
+  f->n = size;
+  f->m = M;
+  f->work = calloc(M*2, sizeof(fft_real_t));
+  f->lenwork = M*2;
+  f->sub = gdft_create(M,0.5,0.5);
+  if (!f->sub){
+    fft_free(f);
+    return NULL;
+  }
+  return f;
+}
+
+int dst8_forward(fft_t *f, fft_real_t *data){
+  int ret = dst8_inverse(f,data);
+  if (ret) return ret;
+  if (f->ortho){
+    return 0;
+  }
+  int i;
+  fft_real_t mul;
+  mul = 1.0 / f->m;
+  for (i=0; i<f->n; i++){
+    data[i] = data[i]*mul;
+  }
+  return 0;
+}
+
+int dst8_inverse(fft_t *f, fft_real_t *data){
+  if (!f || !data) return -1;
+  if (f->algo!=ALGO_DCT8) return -2;
+  int i,N,M;
+  N=f->n;
+  M=2*N-1;
+  fft_real_t *x=f->work;
+  memset(x,0,sizeof(fft_real_t)*f->lenwork);
+  for (i=0; i<f->n; i++){
+    x[i*2+1] = data[i];
+  }
+  for (i=1; i<f->n; i++){
+    x[(i+N)*2-1] = data[f->n-i-1];
+  }
+  gdft_forward(f->sub,x);
+  fft_real_t mul=M;
+  if (f->ortho){
+    mul = sqrt(M);
+  }
+  for (i=0; i<N; i++){
+    data[i] = x[i*2]*mul;
   }
   return 0;
 }

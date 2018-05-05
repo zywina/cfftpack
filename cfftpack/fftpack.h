@@ -168,35 +168,6 @@ int cosqmb_(int *lot, int *jump, int *n, int
 	*inc, fft_real_t *x, int *lenx, fft_real_t *wsave, int *lensav, fft_real_t *
 	work, int *lenwrk, int *ier);
 
-// some internal bits of the C code that users don't need to see -RZ
-
-enum{
-  ALGO_CFFT=1,
-  ALGO_RFFT,
-  ALGO_CFFT2,
-  ALGO_DCT1,
-  ALGO_DCT,
-  ALGO_DCT4,
-  ALGO_DST1,
-  ALGO_DST,
-  ALGO_DST4,
-  ALGO_DCT_2D,
-  ALGO_GDFT,
-  ALGO_DCT5,
-  ALGO_DCT6,
-  ALGO_DCT7,
-  ALGO_DCT8
-};
-
-struct FFT_{
-  fft_real_t *save,*work;
-  int n, m, lensav, lenwork, scale;
-  int algo;
-  int ortho;
-  int inc;
-  struct FFT_ *sub;
-};
-
 #ifdef __cplusplus
 }; // extern"C"
 #endif

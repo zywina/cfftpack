@@ -36,6 +36,20 @@ Some of the algorithms (dct4,dst4) need an even size.
 int fft_next_fast_even_size(int n);
 
 /**
+@brief get next size where 2*n-1 is fast
+
+Use with dct-5,6,7 and dst-8
+*/
+int fft_next_fast_size_2nm1(int n);
+
+/**
+@brief get next size where 2*n+1 is fast
+
+Use with dct-8 and dst-5,6,7
+*/
+int fft_next_fast_size_2np1(int n);
+
+/**
 @brief shift zero frequency to center
 @param data array expected to be binary compatable with "fft_real_t _Complex"
   or std::complex<fft_real_t>
@@ -173,7 +187,7 @@ int dct5_forward(fft_t *f, fft_real_t *data);
 int dct5_inverse(fft_t *f, fft_real_t *data);
 
 /**
-@brief create DCT-VII object
+@brief create DCT-VI object
 @param size length of arrays
 
 DCT-VI is the "odd" equivalent of the "even" DCT-II. The DCT-VII transform is
@@ -211,6 +225,23 @@ Length should be chosen so 2*N+1 is a fast size.
 fft_t *dct8_create(int size);
 int dct8_forward(fft_t *f, fft_real_t *data);
 int dct8_inverse(fft_t *f, fft_real_t *data);
+
+fft_t *dst5_create(int size);
+int dst5_forward(fft_t *f, fft_real_t *data);
+int dst5_inverse(fft_t *f, fft_real_t *data);
+
+fft_t *dst6_create(int size);
+/// DST-VI transform
+int dst6_transform(fft_t *f, fft_real_t *data);
+
+fft_t *dst7_create(int size);
+/// DST-VI transform
+int dst7_transform(fft_t *f, fft_real_t *data);
+
+fft_t *dst8_create(int size);
+int dst8_forward(fft_t *f, fft_real_t *data);
+int dst8_inverse(fft_t *f, fft_real_t *data);
+
 
 #ifdef __cplusplus
 }; // extern"C"
